@@ -1,0 +1,260 @@
+#_______________________________________________________
+#Import data----
+#_______________________________________________________
+library(dplyr)
+library(ggplot2)
+library(corrplot)
+source("http://www.reuningscherer.net/s&ds230/Rfuncs/regJDRS.txt") 
+#myResPlots #myResPlots2 #pairsJDRS
+library(lme4)
+library(car)
+library(nlme)
+library(emmeans)
+library(ggpol)
+library(RColorBrewer)
+library(cowplot)
+r2.mixed<-function(mF){
+  mFX<-model.matrix(mF)
+  VarF <- var(as.vector(fixef(mF) %*% t(mFX)))
+  VarR<-sum(as.numeric(VarCorr(mF))) 
+  VarResid<-attr(VarCorr(mF), "sc")^2
+  fR2<-VarF/(VarF + VarR + VarResid)
+  rfR2<-(VarF + VarR)/(VarF + VarR + VarResid)
+  list(fR2=fR2,rfR2=rfR2)
+}
+#_______________________________________________________
+#Load data----
+#_______________________________________________________
+
+rawdata <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/rawdata.csv")
+
+season <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Season.csv")
+
+plotinfo <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Cascade_PlotInfo.csv")
+
+plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
+
+#_______________________________________________________
+#Make and clean df----
+#_______________________________________________________
+nmin <- left_join(rawdata, plotinfo, by = "Plot")
+
+#calculate delta for all variables
+nmin <- mutate(nmin, 
+               NminDelta = Nmin_Sept-Nmin_June,
+               NnitDelta = Nnit_Sept-Nnit_June,
+               NamDelta = Nam_Sept-Nam_June,
+               TNDelta = TN_Sept-TN_June,
+               TCDelta = TC_Sept-TC_June,
+               pHDelta = pH_Sept-pH_June,
+               WHCDelta = WHC_Sept-WHC_June)
+
+#remove other variables
+nmin <- select(nmin, -c(Nmin_June:TC_Sept))
+nmin <- select(nmin, -c(Initial_Stock:Notes))
+
+#forest 
+oldforest <- filter(nmin, Plot == c(1:15))
+youngforest <- filter(nmin, Plot == c(16:30))
+
+#_______________________________________________________
+#Correlation matrix----
+#_______________________________________________________
+data2 <- dplyr::select(nmin, -Plot,-Block, -Treatment, -Initial_Stock, -Second_Stock, -Final_Soil_Sample, -Notes, -Forest)
+round(cor(data2), 2)
+sigcorr <- cor.mtest(data2, conf.level = .95)
+
+#Make correlation plot for transformed variables
+corrplot.mixed(cor(data2), lower.col="black", upper = "ellipse", tl.col = "black", number.cex=.7, 
+               order = "hclust", tl.pos = "lt", tl.cex=.7, p.mat = sigcorr$p, sig.level = .05)
+
+pairsJDRS(data2)
+
+#_______________________________________________________
+#Both Forests Nmin ----
+#_______________________________________________________
+
+p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
+  geom_boxplot()+
+  geom_jitter(aes(color = Forest), size = 1, alpha = 0.5, width = 0.25, show.legend = F)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+       y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)',
+       fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="Ground Beetle Treatment", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Detritivore","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))
+p1 
+
+pdf("/Users/JaneyLienau/Desktop/NminTreatment.pdf", width = 7, height = 5)
+plot(p1)
+dev.off()
+
+#_______________________________________________________
+##Delta N ---- young forest more availab n
+#_______________________________________________________
+#nmin
+m <- lme(NminDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+#estimate 0.6061286, pvalue- 0.0302
+#nnit
+m <- lme(NnitDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+#nam
+m <- lme(NamDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+#estyoung   0.4427553 p-value 0.0056
+
+#_______________________________________________________
+##Delta TC TN----
+#_______________________________________________________
+#ns
+hist(nmin$TNDelta)#leftish
+hist(log(nmin$TNDelta+4))#normal with adding constant
+hist(nmin$TCDelta)#normal
+
+p2 <- ggplot(nmin) + 
+  geom_boxjitter(aes(x = Treatment, y = TCDelta, fill = Forest),
+                 jitter.shape = 21, jitter.color = NA, 
+                 jitter.height = 0, jitter.width = 0.04,
+                 outlier.color = "black", errorbar.draw = TRUE,
+                 outlier.intersect = TRUE, outlier.shape = 24,
+                 outlier.size = 1.5) +
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', y = 'Change in Total Carbon (%)', fill='Forest Age')+ 
+  ggtitle("Total carbon")+
+  theme(plot.title = element_text(size=14, face="bold",hjust = 0.5))
+p2
+
+p2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
+  geom_boxplot()+
+  geom_jitter(aes(color = Forest), size = 1, alpha = 0.5, width = 0.25, show.legend = F)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Change in Total Carbon (%)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="Ground Beetle Treatment", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Detritivore","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))
+p2
+
+p3 <- ggplot(nmin) + 
+  geom_boxjitter(aes(x = Treatment, y = TNDelta, fill = Forest),
+                 jitter.shape = 21, jitter.color = NA, 
+                 jitter.height = 0, jitter.width = 0.04,
+                 outlier.color = "black", errorbar.draw = TRUE,
+                 outlier.intersect = TRUE, outlier.shape = 24,
+                 outlier.size = 1.5) +
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', y = 'Change in Total Nitrogen (%)', fill='Forest Age')+
+  ggtitle("Total nitrogen")+
+  theme(plot.title = element_text(size=14, face="bold",hjust = 0.5))
+p3
+
+totalCN<-plot_grid(p2, p3, ncol = 2, labels = c("A", "B"), rel_widths = c(2, 2))
+totalCN
+pdf("/Users/JaneyLienau/Desktop/totalCN.pdf", width = 10, height = 6)
+plot(totalCN)
+dev.off()
+
+m <- lme(TNDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m <- lme(TCDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+
+#_______________________________________________________
+#Old vs new* forest----
+#_______________________________________________________
+
+p4 <- ggplot(nmin) + 
+  geom_boxjitter(aes(x = Forest, y = NminDelta, fill = Forest),
+                 jitter.shape = 21, jitter.color = NA, 
+                 jitter.height = 0, jitter.width = 0.04,
+                 outlier.color = "black", errorbar.draw = TRUE,
+                 outlier.intersect = TRUE, outlier.shape = 24,
+                 outlier.size = 1.5) +
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(x = 'Forest Age', y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)', fill = 'Forest Age')+
+  ggtitle("Net nitrogen mineralization by forest type")+
+  theme(plot.title = element_text(size=14, face="bold"))
+p4
+
+
+pdf("/Users/JaneyLienau/Desktop/NminForest.pdf", width = 6, height = 5)
+plot(p4)
+dev.off()
+#_______________________________________________________
+## *Delta N min Young---- 
+#_______________________________________________________
+m <- lme(NminDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")#HT estimate -0.22587237, p 0.0069
+
+m <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
+
+m <- lme(NamDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+
+#check normality
+plot(rstudent(m) ~ m$fitted.values, pch = 19, col = 'red', xlab = "Fitted Values", ylab = "Studentized Residuals",
+     main = paste("Fits vs. Studentized Residuals,", label = m$terms))
+abline(h = 0, lwd = 3)
+abline(h = c(2,-2), lty = 2, lwd = 2, col="blue")
+abline(h = c(3,-3), lty = 2, lwd = 2, col="green")
+
+boxplot(rstudent(m) ~ youngforest$Treatment)#not even
+boxplot(rstudent(m) ~ youngforest$pHDelta)#not even
+boxplot(rstudent(m) ~ youngforest$WHCDelta)#not even
+summary(m)
+
+
+
+#_______________________________________________________
+## Delta N min Old---- 
+#_______________________________________________________
+
+m <- lme(NminDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")
+
+m <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey") 
+
+m <- lme(NamDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+
+#_______________________________________________________
+#### *Delta *TC *TN Young----
+#_______________________________________________________
+m <- lme(TNDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+m <- lme(TCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+#_______________________________________________________
+##Delta TC TN Old----
+#_______________________________________________________
+
+m <- lme(TNDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+m <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+#_______________________________________________________
+##Os Q----
+#_______________________________________________________
+
+#questions for Os
+#use seperate analysis for young and old?
+#Use absolute value for proportion?
+#p-value or AIC
+#some values concentrations for NH4 and AM are negative, should I replace these with 0? Meghan says that they are good for assessing differences still
+
+
+
+
