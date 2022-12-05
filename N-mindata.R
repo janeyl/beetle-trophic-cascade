@@ -1,8 +1,8 @@
-#testing changes123
 
 #_______________________________________________________
 #Import data----
 #_______________________________________________________
+if(TRUE){
 library(dplyr)
 library(ggplot2)
 library(corrplot)
@@ -23,11 +23,11 @@ r2.mixed<-function(mF){
   fR2<-VarF/(VarF + VarR + VarResid)
   rfR2<-(VarF + VarR)/(VarF + VarR + VarResid)
   list(fR2=fR2,rfR2=rfR2)
-}
+}}
 #_______________________________________________________
 #Load data----
 #_______________________________________________________
-
+if(TRUE){
 rawdata <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/rawdata.csv")
 
 season <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Season.csv")
@@ -35,10 +35,11 @@ season <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-c
 plotinfo <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Cascade_PlotInfo.csv")
 
 plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
-
+}
 #_______________________________________________________
 #Make and clean df----
 #_______________________________________________________
+if(TRUE){
 nmin <- left_join(rawdata, plotinfo, by = "Plot")
 
 #calculate delta for all variables
@@ -58,10 +59,11 @@ nmin <- select(nmin, -c(Initial_Stock:Notes))
 #forest 
 oldforest <- filter(nmin, Plot == c(1:15))
 youngforest <- filter(nmin, Plot == c(16:30))
-
+}
 #_______________________________________________________
 #Correlation matrix----
 #_______________________________________________________
+if(TRUE){
 data2 <- dplyr::select(nmin, -Plot,-Block, -Treatment, -Initial_Stock, -Second_Stock, -Final_Soil_Sample, -Notes, -Forest)
 round(cor(data2), 2)
 sigcorr <- cor.mtest(data2, conf.level = .95)
@@ -71,7 +73,7 @@ corrplot.mixed(cor(data2), lower.col="black", upper = "ellipse", tl.col = "black
                order = "hclust", tl.pos = "lt", tl.cex=.7, p.mat = sigcorr$p, sig.level = .05)
 
 pairsJDRS(data2)
-
+}
 #_______________________________________________________
 #Both Forests Nmin ----
 #_______________________________________________________
@@ -98,9 +100,10 @@ p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
         axis.text.y=element_text(margin = margin(r = 10)))
 p1 
 
+if(TRUE){
 pdf("/Users/JaneyLienau/Desktop/NminTreatment.pdf", width = 7, height = 5)
 plot(p1)
-dev.off()
+dev.off()}
 
 #_______________________________________________________
 ##Delta N ---- young forest more availab n
@@ -122,19 +125,6 @@ hist(nmin$TNDelta)#leftish
 hist(log(nmin$TNDelta+4))#normal with adding constant
 hist(nmin$TCDelta)#normal
 
-p2 <- ggplot(nmin) + 
-  geom_boxjitter(aes(x = Treatment, y = TCDelta, fill = Forest),
-                 jitter.shape = 21, jitter.color = NA, 
-                 jitter.height = 0, jitter.width = 0.04,
-                 outlier.color = "black", errorbar.draw = TRUE,
-                 outlier.intersect = TRUE, outlier.shape = 24,
-                 outlier.size = 1.5) +
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
-  theme_minimal()+
-  labs(x = 'Ground Beetle Treatment', y = 'Change in Total Carbon (%)', fill='Forest Age')+ 
-  ggtitle("Total carbon")+
-  theme(plot.title = element_text(size=14, face="bold",hjust = 0.5))
-p2
 
 p2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
   geom_boxplot()+
@@ -158,24 +148,9 @@ p2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
         axis.text.y=element_text(margin = margin(r = 10)))
 p2
 
-p3 <- ggplot(nmin) + 
-  geom_boxjitter(aes(x = Treatment, y = TNDelta, fill = Forest),
-                 jitter.shape = 21, jitter.color = NA, 
-                 jitter.height = 0, jitter.width = 0.04,
-                 outlier.color = "black", errorbar.draw = TRUE,
-                 outlier.intersect = TRUE, outlier.shape = 24,
-                 outlier.size = 1.5) +
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
-  theme_minimal()+
-  labs(x = 'Ground Beetle Treatment', y = 'Change in Total Nitrogen (%)', fill='Forest Age')+
-  ggtitle("Total nitrogen")+
-  theme(plot.title = element_text(size=14, face="bold",hjust = 0.5))
-p3
 
-totalCN<-plot_grid(p2, p3, ncol = 2, labels = c("A", "B"), rel_widths = c(2, 2))
-totalCN
-pdf("/Users/JaneyLienau/Desktop/totalCN.pdf", width = 10, height = 6)
-plot(totalCN)
+pdf("/Users/JaneyLienau/Desktop/totalC.pdf", width = 7, height = 5)
+plot(p2)
 dev.off()
 
 m <- lme(TNDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
@@ -185,18 +160,27 @@ m <- lme(TCDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);sh
 #Old vs new* forest----
 #_______________________________________________________
 
-p4 <- ggplot(nmin) + 
-  geom_boxjitter(aes(x = Forest, y = NminDelta, fill = Forest),
-                 jitter.shape = 21, jitter.color = NA, 
-                 jitter.height = 0, jitter.width = 0.04,
-                 outlier.color = "black", errorbar.draw = TRUE,
-                 outlier.intersect = TRUE, outlier.shape = 24,
-                 outlier.size = 1.5) +
+
+p4 <- ggplot(nmin, aes(x=Forest, y=NminDelta, fill = Forest))+
+  geom_boxplot()+
+  geom_jitter(aes(color = Forest), size = 1, alpha = 0.5, width = 0.25, show.legend = F)+
   scale_fill_manual(values = c("salmon", "paleturquoise3")) +
   theme_minimal()+
-  labs(x = 'Forest Age', y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)', fill = 'Forest Age')+
-  ggtitle("Net nitrogen mineralization by forest type")+
-  theme(plot.title = element_text(size=14, face="bold"))
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="Forest Type", 
+                   limits = c("Old","Young"), 
+                   labels = c("Old Forest", "Young Forest"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))
 p4
 
 
