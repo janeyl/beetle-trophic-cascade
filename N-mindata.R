@@ -6,8 +6,6 @@ if(TRUE){
 library(dplyr)
 library(ggplot2)
 library(corrplot)
-source("http://www.reuningscherer.net/s&ds230/Rfuncs/regJDRS.txt") 
-#myResPlots #myResPlots2 #pairsJDRS
 library(lme4)
 library(car)
 library(nlme)
@@ -15,15 +13,9 @@ library(emmeans)
 library(ggpol)
 library(RColorBrewer)
 library(cowplot)
-r2.mixed<-function(mF){
-  mFX<-model.matrix(mF)
-  VarF <- var(as.vector(fixef(mF) %*% t(mFX)))
-  VarR<-sum(as.numeric(VarCorr(mF))) 
-  VarResid<-attr(VarCorr(mF), "sc")^2
-  fR2<-VarF/(VarF + VarR + VarResid)
-  rfR2<-(VarF + VarR)/(VarF + VarR + VarResid)
-  list(fR2=fR2,rfR2=rfR2)
-}}
+library(ggrepel)
+library(gghalves)
+}
 #_______________________________________________________
 #Load data----
 #_______________________________________________________
@@ -62,32 +54,21 @@ nmin <- select(nmin, -c(Initial_Stock:Notes))
 oldforest <- filter(nmin, Plot == c(1:15))
 youngforest <- filter(nmin, Plot == c(16:30))
 }
-#_______________________________________________________
-#Correlation matrix----
-#_______________________________________________________
-if(TRUE){
-data2 <- dplyr::select(nmin, -Plot,-Block, -Treatment, -Initial_Stock, -Second_Stock, -Final_Soil_Sample, -Notes, -Forest)
-round(cor(data2), 2)
-sigcorr <- cor.mtest(data2, conf.level = .95)
 
-#Make correlation plot for transformed variables
-corrplot.mixed(cor(data2), lower.col="black", upper = "ellipse", tl.col = "black", number.cex=.7, 
-               order = "hclust", tl.pos = "lt", tl.cex=.7, p.mat = sigcorr$p, sig.level = .05)
-
-pairsJDRS(data2)
-}
 #_______________________________________________________
 #Both Forests Nmin ----
 #_______________________________________________________
 
 p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
-  geom_boxplot()+
-  geom_jitter(aes(color = Forest), size = 1, alpha = 0.5, width = 0.25, show.legend = F)+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
   scale_fill_manual(values = c("salmon", "paleturquoise3")) +
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
-       y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)',
-       fill='Forest Type')+
+    y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)',
+    fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
         axis.title.y=element_text(size=14), 
         axis.text.x=element_text(size=12), 
@@ -129,8 +110,10 @@ hist(nmin$TCDelta)#normal
 
 
 p2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
-  geom_boxplot()+
-  geom_jitter(aes(color = Forest), size = 1, alpha = 0.5, width = 0.25, show.legend = F)+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
   scale_fill_manual(values = c("salmon", "paleturquoise3")) +
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
@@ -151,6 +134,7 @@ p2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
 p2
 
 
+
 pdf("/Users/JaneyLienau/Desktop/totalC.pdf", width = 7, height = 5)
 plot(p2)
 dev.off()
@@ -162,10 +146,11 @@ m <- lme(TCDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);sh
 #Old vs new* forest----
 #_______________________________________________________
 
-
 p4 <- ggplot(nmin, aes(x=Forest, y=NminDelta, fill = Forest))+
-  geom_boxplot()+
-  geom_jitter(aes(color = Forest), size = 1, alpha = 0.5, width = 0.25, show.legend = F)+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
   scale_fill_manual(values = c("salmon", "paleturquoise3")) +
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
@@ -193,6 +178,7 @@ dev.off()
 #--------------------------------------------------------------------
 # d13C~d15N plot of genus to show tropic position for Trophic cascade paper
 #------------------------------------------------------------------------
+
 p5 <- ggplot(meandeltaGenus, aes(x=meand15N, y=meand13C), na.action(na.omit))+
   geom_text_repel(label=meandeltaGenus$Genus)+
   labs(x = 'Mean Delta N-15', 
