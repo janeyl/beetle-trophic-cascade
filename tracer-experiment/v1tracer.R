@@ -5,6 +5,7 @@
 library(dplyr)
 library(ggplot2)
 library(lme4)
+library(ggrepel)
 
 #_______________________________________________________
 #Load data and clean
@@ -86,6 +87,7 @@ GBNrecovery <- GBNrecovery%>%
 
 #make a df with soil and isotope to cal % recovery in the soil
 
+#DF DOESN'T WORK!!
 SoilIsotope <-   left_join(soil, soiltray, by = "ID")
 SoilIsotope <- left_join(SoilIsotope, field, by = "Plot")
 names(SoilNrecovery)
@@ -233,4 +235,69 @@ p15 <- ggplot(GBNrecovery, aes(x=d15N, y=d13C), na.action(na.omit))+
  
   geom_text(label=GBNrecovery$SpeciesCode)
 p15
+
+#take the mean of each species for D15N and D13C
+meandelta <- GBNrecovery%>%
+  select(SpeciesCode,
+         d15N,
+         d13C)
+meandelta <- meandelta%>%
+  group_by(., SpeciesCode)%>%
+  mutate(., meand15N = mean(d15N))%>%
+  mutate(., meand13C = mean(d13C))
+
+meandelta <- meandelta%>%
+  select(SpeciesCode,
+    meand15N,
+         meand13C)%>%
+  distinct()
+
+
+pd15 <- ggplot(meandelta, aes(x=meand15N, y=meand13C), na.action(na.omit))+
+  geom_text(label=meandelta$SpeciesCode)
+pd15
+
+#group by genus
+
+#take the mean of each species for D15N and D13C
+meandeltaGenus <- GBNrecovery%>%
+  select(Genus,
+         d15N,
+         d13C)
+meandeltaGenus <- meandeltaGenus%>%
+  group_by(., Genus)%>%
+  mutate(., meand15N = mean(d15N))%>%
+  mutate(., meand13C = mean(d13C))
+
+meandeltaGenus <- meandeltaGenus%>%
+  select(Genus,
+         meand15N,
+         meand13C)%>%
+  distinct()
+
+write.csv(meandeltaGenus, "/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/meandeltaGenus.csv", row.names=FALSE)
+
+#--------------------------------------------------------------------
+# d13C~d15N plot of genus to show tropic position for Trophic cascade paper
+#------------------------------------------------------------------------
+pGd15 <- ggplot(meandeltaGenus, aes(x=meand15N, y=meand13C), na.action(na.omit))+
+  geom_text_repel(label=meandeltaGenus$Genus)+
+  labs(x = 'Mean Delta N-15', 
+    y = 'Mean Delta C-13')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme_minimal()
+pGd15
+
+pdf("/Users/JaneyLienau/Desktop/MeanDeltaN-C.pdf", width = 6, height = 5)
+plot(pGd15)
+dev.off()
+
 

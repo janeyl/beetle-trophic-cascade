@@ -35,6 +35,8 @@ season <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-c
 plotinfo <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Cascade_PlotInfo.csv")
 
 plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
+
+meandeltaGenus <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/meandeltaGenus.csv")
 }
 #_______________________________________________________
 #Make and clean df----
@@ -187,6 +189,30 @@ p4
 pdf("/Users/JaneyLienau/Desktop/NminForest.pdf", width = 6, height = 5)
 plot(p4)
 dev.off()
+
+#--------------------------------------------------------------------
+# d13C~d15N plot of genus to show tropic position for Trophic cascade paper
+#------------------------------------------------------------------------
+p5 <- ggplot(meandeltaGenus, aes(x=meand15N, y=meand13C), na.action(na.omit))+
+  geom_text_repel(label=meandeltaGenus$Genus)+
+  labs(x = 'Mean Delta N-15', 
+       y = 'Mean Delta C-13')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme_minimal()
+p5
+
+pdf("/Users/JaneyLienau/Desktop/MeanDeltaN-C.pdf", width = 6, height = 5)
+plot(p5)
+dev.off()
+
 #_______________________________________________________
 ## *Delta N min Young---- 
 #_______________________________________________________
@@ -232,15 +258,8 @@ m <- lme(TCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);sh
 m <- lme(TNDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
 m <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
 #_______________________________________________________
-##Os Q----
+##End-
 #_______________________________________________________
-
-#questions for Os
-#use seperate analysis for young and old?
-#Use absolute value for proportion?
-#p-value or AIC
-#some values concentrations for NH4 and AM are negative, should I replace these with 0? Meghan says that they are good for assessing differences still
-
 
 
 
