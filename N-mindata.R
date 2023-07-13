@@ -87,7 +87,39 @@ if(TRUE){
 pdf("/Users/JaneyLienau/Desktop/NminTreatment.pdf", width = 7, height = 5)
 plot(p1)
 dev.off()}
+#_______________________________________________________
+#Both Forests Nmin ---- ESA Poster version
+#_______________________________________________________
 
+p <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 2, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_classic()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Change in net nitrogen mineralization\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Detritivore","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "top")
+p
+
+if(TRUE){
+  pdf("/Users/JaneyLienau/Desktop/NminTreatmentESA.pdf", width = 7, height = 5)
+  plot(p)
+  dev.off()}
 #_______________________________________________________
 ##Delta N ---- young forest more availab n
 #_______________________________________________________
