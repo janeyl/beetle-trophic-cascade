@@ -16,6 +16,8 @@ library(cowplot)
 library(ggrepel)
 library(gghalves)
 }
+#when you're ready: put model estimates in a nice table:
+#https://cran.r-project.org/web/packages/sjPlot/vignettes/tab_model_estimates.html
 #_______________________________________________________
 #Load data----
 #_______________________________________________________
