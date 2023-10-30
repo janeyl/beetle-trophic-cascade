@@ -15,9 +15,10 @@ library(RColorBrewer)
 library(cowplot)
 library(ggrepel)
 library(gghalves)
+library(kableExtra) #
+library(broom) 
 }
-#when you're ready: put model estimates in a nice table:
-#https://cran.r-project.org/web/packages/sjPlot/vignettes/tab_model_estimates.html
+
 #_______________________________________________________
 #Load data----
 #_______________________________________________________
@@ -126,12 +127,15 @@ if(TRUE){
 ##Delta N ---- young forest more availab n
 #_______________________________________________________
 #nmin
-m <- lme(NminDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m1 <- lme(NminDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
+;summary(m1);shapiro.test(resid(m1));Anova(m1);lsmeans(m1, pairwise~Forest, adjust="tukey");anova(m1)
 #estimate 0.6061286, pvalue- 0.0302
 #nnit
-m <- lme(NnitDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m2 <- lme(NnitDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
+;summary(m2);shapiro.test(resid(m2));Anova(m2);lsmeans(m2, pairwise~Forest, adjust="tukey");anova(m2)
 #nam
-m <- lme(NamDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m3 <- lme(NamDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
+;summary(m3);shapiro.test(resid(m3));Anova(m3);lsmeans(m3, pairwise~Forest, adjust="tukey");anova(m3)
 #estyoung   0.4427553 p-value 0.0056
 
 #_______________________________________________________
@@ -173,8 +177,10 @@ pdf("/Users/JaneyLienau/Desktop/totalC.pdf", width = 7, height = 5)
 plot(p2)
 dev.off()
 
-m <- lme(TNDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
-m <- lme(TCDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m4 <- lme(TNDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
+;summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m5 <- lme(TCDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
+;summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
 
 #_______________________________________________________
 #Old vs new* forest----
@@ -236,11 +242,14 @@ dev.off()
 #_______________________________________________________
 ## *Delta N min Young---- 
 #_______________________________________________________
-m <- lme(NminDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")#HT estimate -0.22587237, p 0.0069
+m6 <- lme(NminDelta ~ Treatment,random = ~1| Block, data=youngforest)
+;summary(m6);shapiro.test(resid(m6));Anova(m6);lsmeans(m6, pairwise~Treatment, adjust="tukey");anova(m6)#HT estimate -0.22587237, p 0.0069
 
-m <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
+m7 <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=youngforest)
+;summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
 
-m <- lme(NamDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+m8 <- lme(NamDelta ~ Treatment,random = ~1| Block, data=youngforest)
+;summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
 
 #check normality
 plot(rstudent(m) ~ m$fitted.values, pch = 19, col = 'red', xlab = "Fitted Values", ylab = "Studentized Residuals",
@@ -260,26 +269,124 @@ summary(m)
 ## Delta N min Old---- 
 #_______________________________________________________
 
-m <- lme(NminDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")
+m9 <- lme(NminDelta ~ Treatment,random = ~1| Block, data=oldforest)
+;summary(m9);shapiro.test(resid(m9));Anova(m9);lsmeans(m9, pairwise~Treatment, adjust="tukey")
 
-m <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey") 
+m10 <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=oldforest)
+;summary(m10);shapiro.test(resid(m10));Anova(m10);lsmeans(m10, pairwise~Treatment, adjust="tukey") 
 
-m <- lme(NamDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+m11 <- lme(NamDelta ~ Treatment,random = ~1| Block, data=oldforest)
+;summary(m11);shapiro.test(resid(m11));Anova(m11);lsmeans(m11, pairwise~Treatment, adjust="tukey")   
 
 #_______________________________________________________
 #### *Delta *TC *TN Young----
 #_______________________________________________________
-m <- lme(TNDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
-m <- lme(TCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+m12 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=youngforest)
+;summary(m12);shapiro.test(resid(m12));Anova(m12);lsmeans(m12, pairwise~Treatment, adjust="tukey")   
+m13 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=youngforest)
+;summary(m13);shapiro.test(resid(m13));Anova(m13);lsmeans(m13, pairwise~Treatment, adjust="tukey")   
 #_______________________________________________________
 ##Delta TC TN Old----
 #_______________________________________________________
 
-m <- lme(TNDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
-m <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey")   
+m14 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=oldforest)
+;summary(m14);shapiro.test(resid(m14));Anova(m14);lsmeans(m14, pairwise~Treatment, adjust="tukey")   
+m15 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest)
+;summary(m15);shapiro.test(resid(m15));Anova(m15);lsmeans(m15, pairwise~Treatment, adjust="tukey")   
+#_______________________________________________________
+##Stats Table
+#_______________________________________________________
+
+# Create a list to store ANOVA results
+anova_results_list <- list()
+
+# Loop through the models (adjust the range as needed)
+for (i in 1:15) {
+  # Calculate ANOVA for each model (a1 through a49)
+  anova_result <- anova(get(paste0("m", i)))
+  anova_result$Response <- as.character(formula(get(paste0("m", i)))[[2]])
+  
+  # Add the ANOVA result to the list
+  anova_results_list[[i]] <- data.frame(anova_result)
+}
+#rename columns to be more specific 
+
+
+# Combine ANOVA results into a single data frame
+combined_df <- do.call(rbind, anova_results_list)
+
+# Format the F value and p-value
+format_p_value <- function(f_value, df1, df2, p_value) {
+  formatted_f <- sprintf("%.3f", f_value)
+  formatted_p <- sprintf("%.3f", p_value)
+  return(paste0("F(", df1, ",", df2, ")=", formatted_f, ", p=", formatted_p))
+}
+
+combined_df$F_value <- format_p_value(combined_df$`F.value`, combined_df$`numDF`, combined_df$`denDF`, combined_df$`p.value`)
+
+# Create a data frame with terms from row names without incrementing the numbers
+combined_df$term <- rownames(combined_df)
+
+new_data <- combined_df %>%
+  mutate(term = case_when(
+    term == "(Intercept)" ~ "Intercept",
+    term == "(Intercept)1" ~ "Intercept",
+    # Add more conditions as needed
+    TRUE ~ term  # Keep other values unchanged
+  ))
+
+combined_df <- combined_df %>%
+  mutate(term = sub("\\(Intercept\\)\\d+", "(Intercept)", term))%>%
+  mutate(term = sub("Forest\\d+", "Forest", term))%>%
+  mutate(term = sub("Treatment\\d+", "Treatment", term))%>%
+  mutate(term = sub("	Treatment:Forest\\d+", "Treatment:Forest", term))%>%
+  mutate(Order = 1:40)
+rm(table_df)
+table_df <- combined_df %>%
+  select(Response, term, F_value, Order) %>%
+  tidyr::pivot_wider(names_from = "term", values_from = "F_value")
+
+table_df <- table_df%>%
+  select(-"(Intercept)")%>%
+  mutate(SiteID = "test")%>%
+  mutate(SiteID = ifelse(row_number() <= 12, "Treatment*Forest", SiteID))%>%
+  mutate(SiteID = ifelse(row_number() >= 13 & row_number() <= 20, "TNTC*Forest", SiteID))%>%
+  mutate(SiteID = ifelse(row_number() >= 21 & row_number() <= 32, "NMin*YoungForest", SiteID))%>%
+  mutate(SiteID = ifelse(row_number() >= 33 & row_number() <= 40, "TNTC*YoungForest", SiteID))
+  
+Vars_a <- colnames(table_df)
+
+### table test
+table_test <- table_df %>% select(Response, Vars_a[4], SiteID) %>% na.omit()%>%
+  left_join(table_df %>% select(Response, Vars_a[5], SiteID) %>% na.omit()) %>%
+  left_join(table_df %>% select(Response, Vars_a[6], SiteID) %>% na.omit())->summary_test
+
+
+allmodels <- summary_test%>%
+  select("Response", "SiteID", "Treatment", "Forest", "Treatment:Forest")
+
+table <- allmodels%>%
+  kbl() %>%
+  kable_styling()
+
+# Print the table
+table
+#_______________________________________________________
+#ls means
+lm6 <- lsmeans(m6, pairwise~Treatment, adjust="tukey")
+lm7 <- lsmeans(m7, pairwise~Treatment, adjust="tukey")
+
+lm6 <- as.data.frame(lm6$contrasts)
+lm7 <- as.data.frame(lm7$contrasts)
+
+table2 <- lm6%>%
+  kbl() %>%
+  kable_styling()
+table2
+table3 <- lm7%>%
+  kbl() %>%
+  kable_styling()
+table3
 #_______________________________________________________
 ##End-
 #_______________________________________________________
-
-
-
