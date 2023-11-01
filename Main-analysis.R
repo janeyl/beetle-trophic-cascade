@@ -18,7 +18,7 @@ library(gghalves)
 library(kableExtra) #
 library(broom) 
 }
-
+citation(package = "nlme")
 #_______________________________________________________
 #Load data----
 #_______________________________________________________
@@ -127,15 +127,12 @@ if(TRUE){
 ##Delta N ---- young forest more availab n
 #_______________________________________________________
 #nmin
-m1 <- lme(NminDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
-;summary(m1);shapiro.test(resid(m1));Anova(m1);lsmeans(m1, pairwise~Forest, adjust="tukey");anova(m1)
+m1 <- lme(NminDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m1);shapiro.test(resid(m1));Anova(m1);lsmeans(m1, pairwise~Forest, adjust="tukey");anova(m1)
 #estimate 0.6061286, pvalue- 0.0302
 #nnit
-m2 <- lme(NnitDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
-;summary(m2);shapiro.test(resid(m2));Anova(m2);lsmeans(m2, pairwise~Forest, adjust="tukey");anova(m2)
+m2 <- lme(NnitDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m2);shapiro.test(resid(m2));Anova(m2);lsmeans(m2, pairwise~Forest, adjust="tukey");anova(m2)
 #nam
-m3 <- lme(NamDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
-;summary(m3);shapiro.test(resid(m3));Anova(m3);lsmeans(m3, pairwise~Forest, adjust="tukey");anova(m3)
+m3 <- lme(NamDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m3);shapiro.test(resid(m3));Anova(m3);lsmeans(m3, pairwise~Forest, adjust="tukey");anova(m3)
 #estyoung   0.4427553 p-value 0.0056
 
 #_______________________________________________________
