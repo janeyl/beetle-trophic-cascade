@@ -57,7 +57,7 @@ nmin <- select(nmin, -c(Initial_Stock:Notes))
 oldforest <- filter(nmin, Plot == c(1:15))
 youngforest <- filter(nmin, Plot == c(16:30))
 }
-
+#check predictor variables 
 #_______________________________________________________
 #Both Forests Nmin ----
 #_______________________________________________________
@@ -174,10 +174,8 @@ pdf("/Users/JaneyLienau/Desktop/totalC.pdf", width = 7, height = 5)
 plot(p2)
 dev.off()
 
-m4 <- lme(TNDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
-;summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
-m5 <- lme(TCDelta ~ Treatment*Forest,random = ~1| Block, data=nmin)
-;summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m4 <- lme(TNDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m5 <- lme(TCDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
 
 #_______________________________________________________
 #Old vs new* forest----
@@ -239,14 +237,11 @@ dev.off()
 #_______________________________________________________
 ## *Delta N min Young---- 
 #_______________________________________________________
-m6 <- lme(NminDelta ~ Treatment,random = ~1| Block, data=youngforest)
-;summary(m6);shapiro.test(resid(m6));Anova(m6);lsmeans(m6, pairwise~Treatment, adjust="tukey");anova(m6)#HT estimate -0.22587237, p 0.0069
+m6 <- lme(NminDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m6);shapiro.test(resid(m6));Anova(m6);lsmeans(m6, pairwise~Treatment, adjust="tukey");anova(m6)#HT estimate -0.22587237, p 0.0069
 
-m7 <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=youngforest)
-;summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
+m7 <- lme(NnitDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
 
-m8 <- lme(NamDelta ~ Treatment,random = ~1| Block, data=youngforest)
-;summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
+m8 <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
 
 #check normality
 plot(rstudent(m) ~ m$fitted.values, pch = 19, col = 'red', xlab = "Fitted Values", ylab = "Studentized Residuals",
@@ -266,30 +261,23 @@ summary(m)
 ## Delta N min Old---- 
 #_______________________________________________________
 
-m9 <- lme(NminDelta ~ Treatment,random = ~1| Block, data=oldforest)
-;summary(m9);shapiro.test(resid(m9));Anova(m9);lsmeans(m9, pairwise~Treatment, adjust="tukey")
+m9 <- lme(NminDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m9);shapiro.test(resid(m9));Anova(m9);lsmeans(m9, pairwise~Treatment, adjust="tukey")
 
-m10 <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=oldforest)
-;summary(m10);shapiro.test(resid(m10));Anova(m10);lsmeans(m10, pairwise~Treatment, adjust="tukey") 
+m10 <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m10);shapiro.test(resid(m10));Anova(m10);lsmeans(m10, pairwise~Treatment, adjust="tukey") 
 
-m11 <- lme(NamDelta ~ Treatment,random = ~1| Block, data=oldforest)
-;summary(m11);shapiro.test(resid(m11));Anova(m11);lsmeans(m11, pairwise~Treatment, adjust="tukey")   
+m11 <- lme(NamDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m11);shapiro.test(resid(m11));Anova(m11);lsmeans(m11, pairwise~Treatment, adjust="tukey")   
 
 #_______________________________________________________
 #### *Delta *TC *TN Young----
 #_______________________________________________________
-m12 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=youngforest)
-;summary(m12);shapiro.test(resid(m12));Anova(m12);lsmeans(m12, pairwise~Treatment, adjust="tukey")   
-m13 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=youngforest)
-;summary(m13);shapiro.test(resid(m13));Anova(m13);lsmeans(m13, pairwise~Treatment, adjust="tukey")   
+m12 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m12);shapiro.test(resid(m12));Anova(m12);lsmeans(m12, pairwise~Treatment, adjust="tukey")   
+m13 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m13);shapiro.test(resid(m13));Anova(m13);lsmeans(m13, pairwise~Treatment, adjust="tukey")   
 #_______________________________________________________
 ##Delta TC TN Old----
 #_______________________________________________________
 
-m14 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=oldforest)
-;summary(m14);shapiro.test(resid(m14));Anova(m14);lsmeans(m14, pairwise~Treatment, adjust="tukey")   
-m15 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest)
-;summary(m15);shapiro.test(resid(m15));Anova(m15);lsmeans(m15, pairwise~Treatment, adjust="tukey")   
+m14 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m14);shapiro.test(resid(m14));Anova(m14);lsmeans(m14, pairwise~Treatment, adjust="tukey")   
+m15 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m15);shapiro.test(resid(m15));Anova(m15);lsmeans(m15, pairwise~Treatment, adjust="tukey")   
 #_______________________________________________________
 ##Stats Table
 #_______________________________________________________
