@@ -111,7 +111,7 @@ p <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("CT","HT","PT"), 
-                   labels = c("Control", "Detritivore","Predator"))+
+                   labels = c("Control", "Detritivore + Predator","Predator"))+
   theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
         axis.title.y = element_text(margin = margin(l = 5, r=5)), 
         axis.text.x=element_text(margin = margin(t=10)), 
@@ -142,7 +142,6 @@ m3 <- lme(NamDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m3)
 hist(nmin$TNDelta)#leftish
 hist(log(nmin$TNDelta+4))#normal with adding constant
 hist(nmin$TCDelta)#normal
-
 
 p2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
   geom_half_boxplot(side = "l",  outlier.shape = 17)+
@@ -272,10 +271,11 @@ m11 <- lme(NamDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m11)
 #_______________________________________________________
 m12 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m12);shapiro.test(resid(m12));Anova(m12);lsmeans(m12, pairwise~Treatment, adjust="tukey")   
 m13 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m13);shapiro.test(resid(m13));Anova(m13);lsmeans(m13, pairwise~Treatment, adjust="tukey")   
+anova(m13)
+anova(m5)
 #_______________________________________________________
 ##Delta TC TN Old----
 #_______________________________________________________
-
 m14 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m14);shapiro.test(resid(m14));Anova(m14);lsmeans(m14, pairwise~Treatment, adjust="tukey")   
 m15 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m15);shapiro.test(resid(m15));Anova(m15);lsmeans(m15, pairwise~Treatment, adjust="tukey")   
 #_______________________________________________________
