@@ -383,6 +383,49 @@ m <- lme(NnitDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngfo
 
 m <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
 
+
+#_______________________________________________________
+##Functional analysis on Sarah's data to see check some stuff out
+#_______________________________________________________
+beetleFunction <- read.csv("/Users/JaneyLienau/Desktop/beetle-functional-table.csv")
+sarahSpecies <- read.csv("/Users/JaneyLienau/Desktop/species_data.csv")
+speciesCode <- read.csv("/Users/JaneyLienau/Desktop/speciesCode.csv")
+
+test.df <- sarahSpecies%>%
+  select(-Location, -Shannon, -Simpson, -invSimpson, -Richness, -Abundance, -Evenness)%>%
+  tidyr::pivot_longer(., CYPL:LAPA, 
+                      names_to = "Species", 
+                      values_to = "Count")
+sum(test.df$Count)#1077
+sum(sarahSpecies[,c(4:73)]) #1077
+
+
+speciesCode <- speciesCode%>%
+  distinct()
+
+functionTest <- test.df%>%
+  left_join(., beetleFunction, by = )%>%
+  mutate(Species = Genus + Species)
 #_______________________________________________________
 ##End-
 #_______________________________________________________
+
+pTest <- ggplot(test.df, aes(x=AgeClassTxt, y=Count))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Count',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  # scale_x_discrete(name ="Ground Beetle Treatment", 
+  #                  limits = c("CT","HT","PT"), 
+  #                 labels = c("Control", "Detritivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))
+pTest
