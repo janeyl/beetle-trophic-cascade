@@ -29,14 +29,13 @@ if(TRUE){
   
   plotinfo <- read.csv("Cascade_PlotInfo.csv")
   
-  plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
-  
-  meandeltaGenus <- read.csv("meandeltaGenus.csv")
 }
 #_______________________________________________________
 #Make and clean df----
 #_______________________________________________________
 if(TRUE){
+  plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
+  
   nmin <- left_join(rawdata, plotinfo, by = "Plot")
   
   #calculate delta for all variables
@@ -51,7 +50,6 @@ if(TRUE){
   
   #remove other variables
   nmin <- select(nmin, -c(Nmin_June:TC_Sept))
-  nmin <- select(nmin, -c(Initial_Stock:Notes))
   
   #forest 
   oldforest <- filter(nmin, Plot == c(1:15))
@@ -120,7 +118,7 @@ p <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
 p
 
 if(TRUE){
-  pdf("NminTreatmentESA.pdf", width = 7, height = 5)
+  pdf("NminTreatment.pdf", width = 7, height = 5)
   plot(p)
   dev.off()}
 #_______________________________________________________
@@ -212,30 +210,6 @@ p4
 
 pdf("NminForest.pdf", width = 6, height = 5)
 plot(p4)
-dev.off()
-
-#--------------------------------------------------------------------
-# d13C~d15N plot of genus to show tropic position for Trophic cascade paper
-#------------------------------------------------------------------------
-
-p5 <- ggplot(meandeltaGenus, aes(x=meand15N, y=meand13C), na.action(na.omit))+
-  geom_text_repel(label=meandeltaGenus$Genus)+
-  labs(x = 'Mean Delta N-15', 
-       y = 'Mean Delta C-13')+
-  theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
-        axis.text.x=element_text(size=12), 
-        axis.text.y=element_text(size=12))+
-  theme(title=element_text(size=rel(1.2)))+
-  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
-        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
-        axis.text.x=element_text(margin = margin(t=10)), 
-        axis.text.y=element_text(margin = margin(r = 10)))+
-  theme_minimal()
-p5
-
-pdf("MeanDeltaN-C.pdf", width = 6, height = 5)
-plot(p5)
 dev.off()
 
 #_______________________________________________________
@@ -376,8 +350,6 @@ m <- lme(NminDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngfo
 m <- lme(NnitDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
 
 m <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
-
-
 
 #_______________________________________________________
 ##End-
