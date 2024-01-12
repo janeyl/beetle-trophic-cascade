@@ -1,61 +1,61 @@
 
 #_______________________________________________________
-#Import data----
+#Load Library----
 #_______________________________________________________
 if(TRUE){
-library(dplyr)
-library(ggplot2)
-library(corrplot)
-library(lme4)
-library(car)
-library(nlme)
-library(emmeans)
-library(ggpol)
-library(RColorBrewer)
-library(cowplot)
-library(ggrepel)
-library(gghalves)
-library(kableExtra) #
-library(broom) 
+  library(dplyr)
+  library(ggplot2)
+  library(corrplot)
+  library(lme4)
+  library(car)
+  library(nlme)
+  library(emmeans)
+  library(ggpol)
+  library(RColorBrewer)
+  library(cowplot)
+  library(ggrepel)
+  library(gghalves)
+  library(kableExtra) #
+  library(broom) 
 }
 #citation("nlme")
 #_______________________________________________________
 #Load data----
 #_______________________________________________________
 if(TRUE){
-rawdata <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/rawdata.csv")
-
-season <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Season.csv")
-
-plotinfo <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Cascade_PlotInfo.csv")
-
-plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
-
-meandeltaGenus <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/meandeltaGenus.csv")
+  rawdata <- read.csv("rawdata.csv")
+  
+  season <- read.csv("Season.csv")
+  
+  plotinfo <- read.csv("Cascade_PlotInfo.csv")
+  
+  plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
+  
+  meandeltaGenus <- read.csv("meandeltaGenus.csv")
 }
 #_______________________________________________________
 #Make and clean df----
 #_______________________________________________________
 if(TRUE){
-nmin <- left_join(rawdata, plotinfo, by = "Plot")
-
-#calculate delta for all variables
-nmin <- mutate(nmin, 
-               NminDelta = Nmin_Sept-Nmin_June,
-               NnitDelta = Nnit_Sept-Nnit_June,
-               NamDelta = Nam_Sept-Nam_June,
-               TNDelta = TN_Sept-TN_June,
-               TCDelta = TC_Sept-TC_June,
-               pHDelta = pH_Sept-pH_June,
-               WHCDelta = WHC_Sept-WHC_June)
-
-#remove other variables
-nmin <- select(nmin, -c(Nmin_June:TC_Sept))
-nmin <- select(nmin, -c(Initial_Stock:Notes))
-
-#forest 
-oldforest <- filter(nmin, Plot == c(1:15))
-youngforest <- filter(nmin, Plot == c(16:30))
+  nmin <- left_join(rawdata, plotinfo, by = "Plot")
+  
+  #calculate delta for all variables
+  nmin <- mutate(nmin, 
+                 NminDelta = Nmin_Sept-Nmin_June,
+                 NnitDelta = Nnit_Sept-Nnit_June,
+                 NamDelta = Nam_Sept-Nam_June,
+                 TNDelta = TN_Sept-TN_June,
+                 TCDelta = TC_Sept-TC_June,
+                 pHDelta = pH_Sept-pH_June,
+                 WHCDelta = WHC_Sept-WHC_June)
+  
+  #remove other variables
+  nmin <- select(nmin, -c(Nmin_June:TC_Sept))
+  nmin <- select(nmin, -c(Initial_Stock:Notes))
+  
+  #forest 
+  oldforest <- filter(nmin, Plot == c(1:15))
+  youngforest <- filter(nmin, Plot == c(16:30))
 }
 #check predictor variables 
 #_______________________________________________________
@@ -87,11 +87,11 @@ p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
 p1 
 
 if(TRUE){
-pdf("/Users/JaneyLienau/Desktop/NminTreatment.pdf", width = 7, height = 5)
-plot(p1)
-dev.off()}
+  pdf("NminTreatment.pdf", width = 7, height = 5)
+  plot(p1)
+  dev.off()}
 #_______________________________________________________
-#Both Forests Nmin ---- ESA Poster version
+#Both Forests Nmin ----  Poster version
 #_______________________________________________________
 
 p <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
@@ -120,7 +120,7 @@ p <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
 p
 
 if(TRUE){
-  pdf("/Users/JaneyLienau/Desktop/NminTreatmentESA.pdf", width = 7, height = 5)
+  pdf("NminTreatmentESA.pdf", width = 7, height = 5)
   plot(p)
   dev.off()}
 #_______________________________________________________
@@ -169,7 +169,7 @@ p2
 
 
 
-pdf("/Users/JaneyLienau/Desktop/totalC.pdf", width = 7, height = 5)
+pdf("totalC.pdf", width = 7, height = 5)
 plot(p2)
 dev.off()
 #ns
@@ -210,7 +210,7 @@ p4 <- ggplot(nmin, aes(x=Forest, y=NminDelta, fill = Forest))+
 p4
 
 
-pdf("/Users/JaneyLienau/Desktop/NminForest.pdf", width = 6, height = 5)
+pdf("NminForest.pdf", width = 6, height = 5)
 plot(p4)
 dev.off()
 
@@ -234,7 +234,7 @@ p5 <- ggplot(meandeltaGenus, aes(x=meand15N, y=meand13C), na.action(na.omit))+
   theme_minimal()
 p5
 
-pdf("/Users/JaneyLienau/Desktop/MeanDeltaN-C.pdf", width = 6, height = 5)
+pdf("MeanDeltaN-C.pdf", width = 6, height = 5)
 plot(p5)
 dev.off()
 
@@ -292,8 +292,6 @@ for (i in 1:15) {
   # Add the ANOVA result to the list
   anova_results_list[[i]] <- data.frame(anova_result)
 }
-#rename columns to be more specific 
-
 
 # Combine ANOVA results into a single data frame
 combined_df <- do.call(rbind, anova_results_list)
@@ -336,7 +334,7 @@ table_df <- table_df%>%
   mutate(SiteID = ifelse(row_number() >= 13 & row_number() <= 20, "TNTC*Forest", SiteID))%>%
   mutate(SiteID = ifelse(row_number() >= 21 & row_number() <= 32, "NMin*YoungForest", SiteID))%>%
   mutate(SiteID = ifelse(row_number() >= 33 & row_number() <= 40, "TNTC*YoungForest", SiteID))
-  
+
 Vars_a <- colnames(table_df)
 
 ### table test
@@ -378,123 +376,6 @@ m <- lme(NminDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngfo
 m <- lme(NnitDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
 
 m <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
-
-
-#_______________________________________________________
-##Functional analysis on Sarah's data to see check some stuff out
-#_______________________________________________________
-beetleFunction <- read.csv("/Users/JaneyLienau/Desktop/beetle-functional-table.csv")
-sarahSpecies <- read.csv("/Users/JaneyLienau/Desktop/species_data.csv")
-speciesCode <- read.csv("/Users/JaneyLienau/Desktop/speciesCode.csv")
-
-test.df <- sarahSpecies%>%
-  select(-Location, -Shannon, -Simpson, -invSimpson, -Richness, -Abundance, -Evenness)%>%
-  tidyr::pivot_longer(., CYPL:LAPA, 
-                      names_to = "Species", 
-                      values_to = "Count")
-sum(test.df$Count)#1077
-sum(sarahSpecies[,c(4:73)]) #1077
-
-
-speciesCode <- speciesCode%>%
-  distinct()
-
-function.df <- test.df%>%
-  left_join(., beetleFunction, by = "Species")%>%
-  na.omit()%>%
-  filter(Count!=0)
-
-functionTest <- test.df%>%
-  left_join(., beetleFunction, by = "Species")%>%
-  filter(!is.na(ScientificName))%>%
-  filter(Count!=0)%>%
-  filter(AgeClassTxt!="24-29 years")%>%#testing to see if removing this weird intermediate age class helps
-  filter(AgeClassTxt!="14-18 years")%>%na.omit()
-
-sum(functionTest$Count)#486 lost a half with cutting out the age groups
-
-#combind age class 1-2, and 2-3
-functionTest <- functionTest%>%
-  mutate(AgeClass = sub("1", "2", AgeClass))#%>%
-#  mutate(AgeClass = sub("3", "4", AgeClass))
-rm(functionTest2)
-functionTest2 <- functionTest %>%
-  group_by(AgeClassTxt, Species, Function) %>%
-  summarise(Count = sum(Count, na.rm = TRUE))
-sum(functionTest2$Count)#479
-
-functionTest3 <- functionTest %>%
-  group_by(AgeClassTxt, Function) %>%
-  summarise(Count = sum(Count, na.rm = TRUE))
-sum(functionTest3$Count)#479
-#_______________________________________________________
-##plot functional groups across age classes
-#_______________________________________________________
-
-functionalgroups <- ggplot(functionTest, aes(x=AgeClassTxt, y=Count, fill = Function))+
-  geom_half_boxplot(side = "l",  outlier.shape = 17)+
-  geom_half_point(aes(color = Function), 
-                  side = "r", show.legend = F,
-                  size = 1, alpha = .5)+
-#  scale_fill_manual(values = c("salmon", "paleturquoise3","gold1")) +
-  theme_classic()+
-  labs(x = 'Forest Type', 
-    y = 'Species Count',
-    fill='Functional Group')+
-  theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
-        axis.text.x=element_text(size=12), 
-        axis.text.y=element_text(size=12))+
-  theme(title=element_text(size=rel(1.2)))+
-  scale_x_discrete(name ="Forest Type", 
-                    limits = c("Control","1-8 years"), 
-                   labels = c("Old Forest", "Young Forest"))+
-  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
-        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
-        axis.text.x=element_text(margin = margin(t=10)), 
-        axis.text.y=element_text(margin = margin(r = 10)))+
-  theme(legend.position = "top")
-functionalgroups
-pdf("/Users/JaneyLienau/Desktop/functionalgroups.pdf", width = 6, height = 5)
-plot(functionalgroups)
-dev.off()
-
-functionalgroups3 <- ggplot(functionTest3, aes(x=AgeClassTxt, y=Count, fill = Function))+
-  geom_bar(stat = "identity") +
-  theme_classic()+
-  labs(x = 'Forest Type', 
-       y = 'Species Count',
-       fill='Functional Group')+
-  theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
-        axis.text.x=element_text(size=12), 
-        axis.text.y=element_text(size=12))+
-  theme(title=element_text(size=rel(1.2)))+
-  scale_x_discrete(name ="Forest Type", 
-                   limits = c("Control","1-8 years"), 
-                   labels = c("Old Forest", "Young Forest"))+
-  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
-        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
-        axis.text.x=element_text(margin = margin(t=10)), 
-        axis.text.y=element_text(margin = margin(r = 10)))+
-  theme(legend.position = "top")
-functionalgroups3
-
-m <- lm(Count ~ Function, data=functionTest2);summary(m);Anova(m);lsmeans(m, pairwise~Function, adjust="tukey")
-anova(m)
-
-#scratch- don't need
-#check normality
-plot(rstudent(m) ~ m$fitted.values, pch = 19, col = 'red', xlab = "Fitted Values", ylab = "Studentized Residuals",
-     main = paste("Fits vs. Studentized Residuals,", label = m$terms))
-abline(h = 0, lwd = 3)
-abline(h = c(2,-2), lty = 2, lwd = 2, col="blue")
-abline(h = c(3,-3), lty = 2, lwd = 2, col="green")
-
-boxplot(rstudent(m) ~ youngforest$Treatment)#not even
-boxplot(rstudent(m) ~ youngforest$pHDelta)#not even
-boxplot(rstudent(m) ~ youngforest$WHCDelta)#not even
-summary(m)
 
 
 
