@@ -50,8 +50,8 @@ nmin <- mutate(nmin,
                WHCDelta = WHC_Sept-WHC_June)
 
 #remove other variables
-nmin <- select(nmin, -c(Nmin_June:TC_Sept))
-nmin <- select(nmin, -c(Initial_Stock:Notes))
+#nmin <- select(nmin, -c(Nmin_June:TC_Sept))
+#nmin <- select(nmin, -c(Initial_Stock:Notes))
 
 #forest 
 oldforest <- filter(nmin, Plot == c(1:15))
@@ -496,7 +496,55 @@ boxplot(rstudent(m) ~ youngforest$pHDelta)#not even
 boxplot(rstudent(m) ~ youngforest$WHCDelta)#not even
 summary(m)
 
+#_______________________________________________________
+##Reviewer Comments Additions
+#_______________________________________________________
+#pH
+round(mean(oldforest$pH_June), 2)
+round(mean(oldforest$pH_Sept), 2)
 
+round(mean(youngforest$pH_June), 2)
+round(mean(youngforest$pH_Sept), 2)
+#WHC
+round(mean(oldforest$WHC_June), 2)
+round(mean(oldforest$WHC_Sept), 2)
+
+round(mean(youngforest$WHC_June), 2)
+round(mean(youngforest$WHC_Sept), 2)
+#Total Carbon
+round(mean(oldforest$TC_June), 2)
+round(mean(oldforest$TC_Sept), 2)
+
+round(mean(youngforest$TC_June), 2)
+round(mean(youngforest$TC_Sept), 2)
+#Total Nitrogen
+round(mean(oldforest$TN_June), 2)
+round(mean(oldforest$TN_Sept), 2)
+
+round(mean(youngforest$TN_June), 2)
+round(mean(youngforest$TN_Sept), 2)
+# N min
+round(mean(oldforest$Nmin_June), 2)
+round(mean(oldforest$Nmin_Sept), 2)
+
+round(mean(youngforest$Nmin_June), 2)
+round(mean(youngforest$Nmin_Sept), 2)
+# N nit
+round(mean(oldforest$Nnit_June), 2)
+round(mean(oldforest$Nnit_Sept), 2)
+
+round(mean(youngforest$Nnit_June), 2)
+round(mean(youngforest$Nnit_Sept), 2)
+
+# N amon
+round(mean(oldforest$Nam_June), 2)
+round(mean(oldforest$Nam_Sept), 2)
+
+round(mean(youngforest$Nam_June), 2)
+round(mean(youngforest$Nam_Sept), 2)
+
+#-----
+m <- lme(pHDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
 
 #_______________________________________________________
 ##End-
