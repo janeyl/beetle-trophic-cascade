@@ -17,6 +17,7 @@ library(ggrepel)
 library(gghalves)
 library(kableExtra) #
 library(broom) 
+library(spdep)
 }
 #citation("nlme")
 #_______________________________________________________
@@ -32,6 +33,10 @@ plotinfo <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic
 plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
 
 meandeltaGenus <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/meandeltaGenus.csv")
+#CHECK~ move to git hub if goes into pub
+beetleFunction <- read.csv("/Users/JaneyLienau/Desktop/WorkingData/beetle-functional-table.csv")
+sarahSpecies <- read.csv("/Users/JaneyLienau/Desktop/WorkingData/species_data.csv")
+speciesCode <- read.csv("/Users/JaneyLienau/Desktop/WorkingData/speciesCode.csv")
 }
 #_______________________________________________________
 #Make and clean df----
@@ -47,7 +52,10 @@ nmin <- mutate(nmin,
                TNDelta = TN_Sept-TN_June,
                TCDelta = TC_Sept-TC_June,
                pHDelta = pH_Sept-pH_June,
-               WHCDelta = WHC_Sept-WHC_June)
+               WHCDelta = WHC_Sept-WHC_June,
+              CtoN_June = TC_June/TN_June,
+              CtoN_Sept = TC_Sept/TN_Sept,
+              CtoN = CtoN_Sept-CtoN_June)
 
 #remove other variables
 #nmin <- select(nmin, -c(Nmin_June:TC_Sept))
@@ -57,11 +65,11 @@ nmin <- mutate(nmin,
 oldforest <- filter(nmin, Plot == c(1:15))
 youngforest <- filter(nmin, Plot == c(16:30))
 }
-#check predictor variables 
-#_______________________________________________________
-#Both Forests Nmin ----
-#_______________________________________________________
 
+#_______________________________________________________
+#Figure 3: Both Forests Nmin change and real numbers
+#_______________________________________________________
+#Figure 3 (A)
 p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
   geom_half_boxplot(side = "l",  outlier.shape = 17)+
   geom_half_point(aes(color = Forest), 
@@ -79,52 +87,268 @@ p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="Ground Beetle Treatment", 
                    limits = c("CT","HT","PT"), 
-                   labels = c("Control", "Detritivore\n+Predator","Predator"))+
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
   theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
         axis.title.y = element_text(margin = margin(l = 5, r=5)), 
         axis.text.x=element_text(margin = margin(t=10)), 
-        axis.text.y=element_text(margin = margin(r = 10)))
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "top")
 p1 
 
 if(TRUE){
 pdf("/Users/JaneyLienau/Desktop/NminTreatment.pdf", width = 7, height = 5)
 plot(p1)
 dev.off()}
-#_______________________________________________________
-#Both Forests Nmin ---- ESA Poster version
-#_______________________________________________________
-
-p <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
+##Figure 3 (B & C)
+p1.1 <- ggplot(nmin, aes(x=Treatment, y=Nmin_June, fill = Forest))+
   geom_half_boxplot(side = "l",  outlier.shape = 17)+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
-                  size = 2, alpha = .5)+
+                  size = 1, alpha = .5)+
   scale_fill_manual(values = c("salmon", "paleturquoise3")) +
-  theme_classic()+
+  theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
-    y = 'Change in net nitrogen mineralization\n(ug N g-1 day-1)',
+    y = 'Initial Net Nitrogen Mineralization\n(ug N g-1 day-1)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
         axis.title.y=element_text(size=14), 
-        axis.text.x=element_text(size=18), 
+        axis.text.x=element_text(size=12), 
         axis.text.y=element_text(size=12))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("CT","HT","PT"), 
-                   labels = c("Control", "Detritivore\n+Predator","Predator"))+
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+p1.1 
+p1.2 <- ggplot(nmin, aes(x=Treatment, y=Nmin_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Final Net Nitrogen Mineralization\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+p1.2
+
+prow2 <- plot_grid(p1.1, p1.2, align = 'h',
+  hjust = -1
+)
+prow2
+if(TRUE){
+  pdf("/Users/JaneyLienau/Desktop/p1.3.pdf", width = 10, height = 5)
+  plot(prow2)
+  dev.off()}
+#composite Figure 3 parts A,B,C in illistrator
+
+#_______________________________________________________
+## Figure 4: Delta TC, TN
+#_______________________________________________________
+
+p2.1 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', 
+    y = 'Change in Total Carbon (%)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "right")
+p2.1
+p2.2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', 
+    y = 'Change in Total Nitrogen (%)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+p2.2
+
+prow3 <- plot_grid(p2.1 + theme(legend.position="none"),
+                   p2.2, align = 'h')
+
+# extract the legend from one of the plots
+legend <- get_legend(p2.1)
+legend
+prow <- plot_grid(prow3, legend, rel_widths = c(2,.4))
+prow
+if(TRUE){
+  pdf("/Users/JaneyLienau/Desktop/Figure-4.pdf", width = 10, height = 5)
+  plot(prow)
+  dev.off()}
+
+#_______________________________________________________
+## Figure 5: C:N ratio
+#_______________________________________________________
+p2.3 <- ggplot(oldforest, aes(x=Treatment, y=CtoN))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17, aes(fill = "FixedColor")) +
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("FixedColor" = "salmon")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Change in C:N Ratio (Old Forest)')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+p2.3
+p2.4 <- ggplot(nmin, aes(x=Treatment, y=CtoN_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Initial C:N Ratio',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
   theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
         axis.title.y = element_text(margin = margin(l = 5, r=5)), 
         axis.text.x=element_text(margin = margin(t=10)), 
         axis.text.y=element_text(margin = margin(r = 10)))+
   theme(legend.position = "top")
-p
+p2.4
+p2.5 <- ggplot(nmin, aes(x=Treatment, y=CtoN_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Final C:N Ratio',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "top")
+p2.5
+p2.6 <- ggplot(nmin, aes(x=Treatment, y=CtoN, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Change in C:N Ratio',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "top")
+p2.6
 
 if(TRUE){
-  pdf("/Users/JaneyLienau/Desktop/NminTreatmentESA.pdf", width = 7, height = 5)
-  plot(p)
+  pdf("/Users/JaneyLienau/Desktop/Figure-5.pdf", width = 5, height = 5)
+  plot(p2.3)
   dev.off()}
 #_______________________________________________________
-##Delta N ---- young forest more availab n
+#Moran's I test
+#_______________________________________________________
+
+nb2listw(nmin, style = "W")
+lm.morantest(m1, nb2listw(nmin, style="W"))
+# Fit your linear mixed-effects model
+m1 <- lme(NminDelta ~ Treatment*Forest, random = ~1|Block, data = nmin)
+# Compute residuals
+residuals_m1 <- resid(m1)
+# Ensure coords_m1 represents spatial coordinates, e.g., cbind(longitude, latitude)
+coords_m1 <- cbind(nmin$Plot, nmin$Forest)  # Adjust this to your actual spatial coordinates
+# Create spatial weights matrix (example using knn neighbors)
+nearby_m1 <- knn2nb(knearneigh(coords_m1, k = 3))  # Adjust k as needed
+listw_m1 <- nb2listw(nearby_m1, style="W")  # Convert to weights list and row-standardize
+# Test for spatial autocorrelation
+moran_res_m1 <- moran.test(residuals_m1, listw = listw_m1)
+# Print Moran's I test results
+print(moran_res_m1)
+#_______________________________________________________
+## Stats Comparing both forests
 #_______________________________________________________
 #nmin
 hist(nmin$NminDelta)
@@ -137,106 +361,13 @@ m2 <- lme(NnitDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m2
 hist(nmin$NamDelta)
 m3 <- lme(NamDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m3);shapiro.test(resid(m3));Anova(m3);lsmeans(m3, pairwise~Forest, adjust="tukey");anova(m3)
 #estyoung   0.4427553 p-value 0.0056
-
-#_______________________________________________________
-##Delta TC TN----
-#_______________________________________________________
-
-p2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
-  geom_half_boxplot(side = "l",  outlier.shape = 17)+
-  geom_half_point(aes(color = Forest), 
-                  side = "r", show.legend = F,
-                  size = 2, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
-  theme_classic()+
-  labs(#x = 'Ground Beetle Treatment', 
-    y = 'Change in Total Carbon (%)',
-    fill='Forest Type')+
-  theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
-        axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
-  theme(title=element_text(size=rel(1.2)))+
-  scale_x_discrete(name ="", 
-                   limits = c("CT","HT","PT"), 
-                   labels = c("Control", "Detritivore\n+Predator","Predator"))+
-  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
-        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
-        axis.text.x=element_text(margin = margin(t=10)), 
-        axis.text.y=element_text(margin = margin(r = 10)))+
-  theme(legend.position = "top")
-p2
-
-
-
-pdf("/Users/JaneyLienau/Desktop/totalC.pdf", width = 7, height = 5)
-plot(p2)
-dev.off()
 #ns
 hist(nmin$TNDelta)#leftish
 hist(log(nmin$TNDelta+4))#normal with adding constant
-m4 <- lme(log(TNDelta+4) ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Forest, adjust="tukey")
+m4 <- lme(log(TNDelta+4) ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m4);shapiro.test(resid(m4));Anova(m4);lsmeans(m4, pairwise~Forest, adjust="tukey")
 
 hist(nmin$TCDelta)#normal
 m5 <- lme(TCDelta ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m5);shapiro.test(resid(m5));Anova(m5);lsmeans(m5, pairwise~Forest, adjust="tukey")
-
-#_______________________________________________________
-#Old vs new* forest----
-#_______________________________________________________
-
-p4 <- ggplot(nmin, aes(x=Forest, y=NminDelta, fill = Forest))+
-  geom_half_boxplot(side = "l",  outlier.shape = 17)+
-  geom_half_point(aes(color = Forest), 
-                  side = "r", show.legend = F,
-                  size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
-  theme_classic()+
-  labs(#x = 'Ground Beetle Treatment', 
-    y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)',
-    fill='Forest Type')+
-  theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
-        axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
-  theme(title=element_text(size=rel(1.2)))+
-  scale_x_discrete(name ="", 
-                   limits = c("Old","Young"), 
-                   labels = c("Old Forest", "Young Forest"))+
-  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
-        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
-        axis.text.x=element_text(margin = margin(t=10)), 
-        axis.text.y=element_text(margin = margin(r = 10)))+
-  theme(legend.position = "top")
-p4
-
-
-pdf("/Users/JaneyLienau/Desktop/NminForest.pdf", width = 6, height = 5)
-plot(p4)
-dev.off()
-
-#--------------------------------------------------------------------
-# d13C~d15N plot of genus to show tropic position for Trophic cascade paper
-#------------------------------------------------------------------------
-
-p5 <- ggplot(meandeltaGenus, aes(x=meand15N, y=meand13C), na.action(na.omit))+
-  geom_text_repel(label=meandeltaGenus$Genus)+
-  labs(x = 'Mean Delta N-15', 
-       y = 'Mean Delta C-13')+
-  theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
-        axis.text.x=element_text(size=12), 
-        axis.text.y=element_text(size=12))+
-  theme(title=element_text(size=rel(1.2)))+
-  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
-        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
-        axis.text.x=element_text(margin = margin(t=10)), 
-        axis.text.y=element_text(margin = margin(r = 10)))+
-  theme_minimal()
-p5
-
-pdf("/Users/JaneyLienau/Desktop/MeanDeltaN-C.pdf", width = 6, height = 5)
-plot(p5)
-dev.off()
 
 #_______________________________________________________
 ## *Delta N min Young---- 
@@ -247,7 +378,6 @@ hist(youngforest$NnitDelta)#normal
 m7 <- lme(NnitDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
 hist(youngforest$NamDelta)#normal
 m8 <- lme(NamDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
-
 
 #_______________________________________________________
 ## Delta N min Old---- 
@@ -262,7 +392,7 @@ hist(oldforest$NamDelta)#normal
 m11 <- lme(NamDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m11);shapiro.test(resid(m11));Anova(m11);lsmeans(m11, pairwise~Treatment, adjust="tukey")   
 
 #_______________________________________________________
-#### *Delta *TC *TN Young----
+#### Delta TC TN Young----
 #_______________________________________________________
 hist(youngforest$TNDelta)#normal
 m12 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m12);shapiro.test(resid(m12));Anova(m12);lsmeans(m12, pairwise~Treatment, adjust="tukey")   
@@ -277,7 +407,28 @@ m14 <- lme(TNDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m14);
 hist(oldforest$TCDelta)#normal
 m15 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m15);shapiro.test(resid(m15));Anova(m15);lsmeans(m15, pairwise~Treatment, adjust="tukey")   
 #_______________________________________________________
-##Stats Table
+##Delta and raw values C:N Young 
+#_______________________________________________________
+m <- lme(CtoN ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+m <- lme(CtoN_Sept ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+m <- lme(CtoN_June ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+#_______________________________________________________
+##Delta and raw values C:N Old 
+#_______________________________________________________
+m <- lme(CtoN_June ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+m <- lme(CtoN_Sept ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+#sig
+m <- lme(CtoN ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+#sig
+#--------------------testing WCH and Ph
+m <- lme(WHCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)#
+
+m <- lme(NnitDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #
+
+m <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
+
+#_______________________________________________________
+## Supplementary Table 1: Stats Table
 #_______________________________________________________
 
 # Create a list to store ANOVA results
@@ -371,21 +522,67 @@ table3 <- lm7%>%
   kable_styling()
 table3
 
+#_______________________________________________________
+## Table 2: average soil variables table
+#_______________________________________________________
+#pH
+round(mean(oldforest$pH_June), 2)
+round(mean(oldforest$pH_Sept), 2)
 
-#--------------------testing WCH and Ph
-m <- lme(NminDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m6);shapiro.test(resid(m6));Anova(m6);lsmeans(m6, pairwise~Treatment, adjust="tukey");anova(m6)#HT estimate -0.22587237, p 0.0069
+round(mean(youngforest$pH_June), 2)
+round(mean(youngforest$pH_Sept), 2)
+#WHC
+round(mean(oldforest$WHC_June), 2)
+round(mean(oldforest$WHC_Sept), 2)
 
-m <- lme(NnitDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #HT estimate -0.21302869, p 0.0696
+round(mean(youngforest$WHC_June), 2)
+round(mean(youngforest$WHC_Sept), 2)
+#Total Carbon
+round(mean(oldforest$TC_June), 2)
+round(mean(oldforest$TC_Sept), 2)
 
-m <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
+round(mean(youngforest$TC_June), 2)
+round(mean(youngforest$TC_Sept), 2)
+#Total Nitrogen
+round(mean(oldforest$TN_June), 2)
+round(mean(oldforest$TN_Sept), 2)
 
+round(mean(youngforest$TN_June), 2)
+round(mean(youngforest$TN_Sept), 2)
+# N min
+round(mean(oldforest$Nmin_June), 2)
+round(mean(oldforest$Nmin_Sept), 2)
+
+round(mean(youngforest$Nmin_June), 2)
+round(mean(youngforest$Nmin_Sept), 2)
+# N nit
+round(mean(oldforest$Nnit_June), 2)
+round(mean(oldforest$Nnit_Sept), 2)
+
+round(mean(youngforest$Nnit_June), 2)
+round(mean(youngforest$Nnit_Sept), 2)
+
+# N amon
+round(mean(oldforest$Nam_June), 2)
+round(mean(oldforest$Nam_Sept), 2)
+
+round(mean(youngforest$Nam_June), 2)
+round(mean(youngforest$Nam_Sept), 2)
+
+# C:N
+round(mean(oldforest$CtoN_June), 2)#13.77
+round(mean(oldforest$CtoN_Sept), 2)#13.45
+
+round(mean(youngforest$CtoN_June), 2)#18.4
+round(mean(youngforest$CtoN_Sept), 2)#17.62
+
+#___________________________________________________________________________________________________________
+##Supplemental Material
+#___________________________________________________________________________________________________________
 
 #_______________________________________________________
-##Functional analysis on Sarah's data to see check some stuff out
+##Functional analysis 
 #_______________________________________________________
-beetleFunction <- read.csv("/Users/JaneyLienau/Desktop/beetle-functional-table.csv")
-sarahSpecies <- read.csv("/Users/JaneyLienau/Desktop/species_data.csv")
-speciesCode <- read.csv("/Users/JaneyLienau/Desktop/speciesCode.csv")
 
 test.df <- sarahSpecies%>%
   select(-Location, -Shannon, -Simpson, -invSimpson, -Richness, -Abundance, -Evenness)%>%
@@ -428,9 +625,19 @@ functionTest3 <- functionTest %>%
   summarise(Count = sum(Count, na.rm = TRUE))
 sum(functionTest3$Count)#479
 #_______________________________________________________
+##ground beetle density for species of interest
+#_______________________________________________________
+# 6 pitfall traps per stand, four stands within each age class, =48 pitfall traps
+#for just these two age classes 48 ave species of interest total 32.77381
+#functionTest
+averageCounts <- functionTest %>%
+  filter(Species == "HAPE" | Species == "PTTR"|Species=="PTRO"|Species=="PTPE") %>%
+  group_by(Species) %>%
+  summarise(AverageCount = mean(Count, na.rm = TRUE))
+sum(averageCounts$AverageCount)#=32.77381
+#_______________________________________________________
 ##plot functional groups across age classes
 #_______________________________________________________
-
 functionalgroups <- ggplot(functionTest, aes(x=AgeClassTxt, y=Count, fill = Function))+
   geom_half_boxplot(side = "l",  outlier.shape = 17)+
   geom_half_point(aes(color = Function), 
@@ -483,68 +690,103 @@ functionalgroups3
 m <- lm(Count ~ Function, data=functionTest2);summary(m);Anova(m);lsmeans(m, pairwise~Function, adjust="tukey")
 anova(m)
 
-#scratch- don't need
-#check normality
-plot(rstudent(m) ~ m$fitted.values, pch = 19, col = 'red', xlab = "Fitted Values", ylab = "Studentized Residuals",
-     main = paste("Fits vs. Studentized Residuals,", label = m$terms))
-abline(h = 0, lwd = 3)
-abline(h = c(2,-2), lty = 2, lwd = 2, col="blue")
-abline(h = c(3,-3), lty = 2, lwd = 2, col="green")
-
-boxplot(rstudent(m) ~ youngforest$Treatment)#not even
-boxplot(rstudent(m) ~ youngforest$pHDelta)#not even
-boxplot(rstudent(m) ~ youngforest$WHCDelta)#not even
-summary(m)
 
 #_______________________________________________________
-##Reviewer Comments Additions
+#Supplemental X: N min in old vs new forest----
 #_______________________________________________________
-#pH
-round(mean(oldforest$pH_June), 2)
-round(mean(oldforest$pH_Sept), 2)
 
-round(mean(youngforest$pH_June), 2)
-round(mean(youngforest$pH_Sept), 2)
-#WHC
-round(mean(oldforest$WHC_June), 2)
-round(mean(oldforest$WHC_Sept), 2)
+p4 <- ggplot(nmin, aes(x=Forest, y=NminDelta, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("Old Forest", "Young Forest"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "top")
+p4
 
-round(mean(youngforest$WHC_June), 2)
-round(mean(youngforest$WHC_Sept), 2)
-#Total Carbon
-round(mean(oldforest$TC_June), 2)
-round(mean(oldforest$TC_Sept), 2)
 
-round(mean(youngforest$TC_June), 2)
-round(mean(youngforest$TC_Sept), 2)
-#Total Nitrogen
-round(mean(oldforest$TN_June), 2)
-round(mean(oldforest$TN_Sept), 2)
+pdf("/Users/JaneyLienau/Desktop/NminForest.pdf", width = 6, height = 5)
+plot(p4)
+dev.off()
 
-round(mean(youngforest$TN_June), 2)
-round(mean(youngforest$TN_Sept), 2)
-# N min
-round(mean(oldforest$Nmin_June), 2)
-round(mean(oldforest$Nmin_Sept), 2)
 
-round(mean(youngforest$Nmin_June), 2)
-round(mean(youngforest$Nmin_Sept), 2)
-# N nit
-round(mean(oldforest$Nnit_June), 2)
-round(mean(oldforest$Nnit_Sept), 2)
+#_______________________________________________________
+# Supplemental X: other soil variables
+#_______________________________________________________
 
-round(mean(youngforest$Nnit_June), 2)
-round(mean(youngforest$Nnit_Sept), 2)
+px <- ggplot(nmin, aes(x=Treatment, y=pHDelta, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Change in Soil pH',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "top")
+px 
 
-# N amon
-round(mean(oldforest$Nam_June), 2)
-round(mean(oldforest$Nam_Sept), 2)
+pw <- ggplot(nmin, aes(x=Treatment, y=WHCDelta, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', 
+    y = 'Change in WHC',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+pw
+pxw <- plot_grid(px,pw, ncol = 1)
+pxw
 
-round(mean(youngforest$Nam_June), 2)
-round(mean(youngforest$Nam_Sept), 2)
 
-#-----
-m <- lme(pHDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+if(TRUE){
+  pdf("/Users/JaneyLienau/Desktop/Supp-figX.pdf", width = 5, height = 10)
+  plot(pxw)
+  dev.off()}
 
 #_______________________________________________________
 ##End-
