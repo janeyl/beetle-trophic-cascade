@@ -1,3 +1,9 @@
+#___________________________________________________________________________________________________________
+## Janey Lienau
+## Title: Ground beetle trophic interactions alter available nitrogen in temperate forest soil
+## Created: Fall 2022
+## Last Modified: May 31 2024
+#___________________________________________________________________________________________________________
 
 #_______________________________________________________
 #Import data----
@@ -54,14 +60,13 @@ nmin <- mutate(nmin,
               CtoN_Sept = TC_Sept/TN_Sept,
               CtoN = CtoN_Sept-CtoN_June)
 
-#remove other variables
-#nmin <- select(nmin, -c(Nmin_June:TC_Sept))
-#nmin <- select(nmin, -c(Initial_Stock:Notes))
-
 #forest 
 oldforest <- filter(nmin, Plot == c(1:15))
 youngforest <- filter(nmin, Plot == c(16:30))
 }
+#___________________________________________________________________________________________________________
+##Figures
+#___________________________________________________________________________________________________________
 
 #_______________________________________________________
 #Figure 3: Both Forests Nmin change and real numbers
@@ -325,6 +330,9 @@ if(TRUE){
   pdf("/Users/JaneyLienau/Desktop/Figure-5.pdf", width = 5, height = 5)
   plot(p2.3)
   dev.off()}
+#___________________________________________________________________________________________________________
+##Statistics
+#___________________________________________________________________________________________________________
 #_______________________________________________________
 #Moran's I test
 #_______________________________________________________
@@ -406,17 +414,19 @@ m15 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m15);
 #_______________________________________________________
 ##Delta and raw values C:N Young 
 #_______________________________________________________
-m <- lme(CtoN ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
-m <- lme(CtoN_Sept ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
-m <- lme(CtoN_June ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+m16 <- lme(CtoN ~ Treatment,random = ~1| Block, data=youngforest);summary(m16);shapiro.test(resid(m16));Anova(m16);lsmeans(m16, pairwise~Treatment, adjust="tukey");anova(m16)
+#m <- lme(CtoN_Sept ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+#m <- lme(CtoN_June ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
 #_______________________________________________________
 ##Delta and raw values C:N Old 
 #_______________________________________________________
-m <- lme(CtoN_June ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
-m <- lme(CtoN_Sept ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+m17 <- lme(CtoN ~ Treatment,random = ~1| Block, data=oldforest);summary(m17);shapiro.test(resid(m17));Anova(m17);lsmeans(m17, pairwise~Treatment, adjust="tukey");anova(m17)
 #sig
-m <- lme(CtoN ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+#m <- lme(CtoN_June ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
+#m <- lme(CtoN_Sept ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
 #sig
+m18 <- lme(CtoN ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m18);shapiro.test(resid(m18));Anova(m18);lsmeans(m18, pairwise~Forest, adjust="tukey")
+
 #--------------------testing WCH and Ph
 m <- lme(WHCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)#
 
@@ -425,14 +435,14 @@ m <- lme(NnitDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngfo
 m <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
 
 #_______________________________________________________
-## Supplementary Table 1: Stats Table
+## Stats Table
 #_______________________________________________________
 
 # Create a list to store ANOVA results
 anova_results_list <- list()
 
 # Loop through the models (adjust the range as needed)
-for (i in 1:15) {
+for (i in 1:18) {
   # Calculate ANOVA for each model (a1 through a49)
   anova_result <- anova(get(paste0("m", i)))
   anova_result$Response <- as.character(formula(get(paste0("m", i)))[[2]])
@@ -471,12 +481,13 @@ combined_df <- combined_df %>%
   mutate(term = sub("Forest\\d+", "Forest", term))%>%
   mutate(term = sub("Treatment\\d+", "Treatment", term))%>%
   mutate(term = sub("	Treatment:Forest\\d+", "Treatment:Forest", term))%>%
-  mutate(Order = 1:40)
-rm(table_df)
+  mutate(Order = 1:48)
+#rm(table_df)
 table_df <- combined_df %>%
   select(Response, term, F_value, Order) %>%
   tidyr::pivot_wider(names_from = "term", values_from = "F_value")
-
+#----------------------------------Stopped here->need to adapt for adding m16 and m17, and m18-TABLE NOT WORKING!
+#I extracted C:N manually
 table_df <- table_df%>%
   select(-"(Intercept)")%>%
   mutate(SiteID = "test")%>%
@@ -506,9 +517,11 @@ table
 #ls means on significant models
 lm6 <- lsmeans(m6, pairwise~Treatment, adjust="tukey")
 lm7 <- lsmeans(m7, pairwise~Treatment, adjust="tukey")
+lm17 <- lsmeans(m17, pairwise~Treatment, adjust="tukey")
 
 lm6 <- as.data.frame(lm6$contrasts)
 lm7 <- as.data.frame(lm7$contrasts)
+lm17 <- as.data.frame(lm17$contrasts)
 
 table2 <- lm6%>%
   kbl() %>%
@@ -518,6 +531,10 @@ table3 <- lm7%>%
   kbl() %>%
   kable_styling()
 table3
+table4 <- lm17%>%
+  kbl() %>%
+  kable_styling()
+table4
 
 #_______________________________________________________
 ## Table 2: average soil variables table
@@ -577,9 +594,8 @@ round(mean(youngforest$CtoN_Sept), 2)#17.62
 ##Supplemental Material
 #___________________________________________________________________________________________________________
 
-
 #_______________________________________________________
-#Supplemental X: N min in old vs new forest----
+#Supplemental Figure 1: N min in old vs new forest----
 #_______________________________________________________
 
 p4 <- ggplot(nmin, aes(x=Forest, y=NminDelta, fill = Forest))+
@@ -614,7 +630,7 @@ dev.off()
 
 
 #_______________________________________________________
-# Supplemental X: other soil variables
+# Supplemental Figure 2: other soil variables
 #_______________________________________________________
 
 px <- ggplot(nmin, aes(x=Treatment, y=pHDelta, fill = Forest))+
