@@ -101,6 +101,7 @@ if(TRUE){
 pdf("/Users/JaneyLienau/Desktop/NminTreatment.pdf", width = 7, height = 5)
 plot(p1)
 dev.off()}
+
 ##Figure 3 (B & C)
 p1.1 <- ggplot(nmin, aes(x=Treatment, y=Nmin_June, fill = Forest))+
   geom_half_boxplot(side = "l",  outlier.shape = 17)+
@@ -216,17 +217,22 @@ p2.2
 
 prow3 <- plot_grid(p2.1 + theme(legend.position="none"),
                    p2.2, align = 'h')
-
+prow3
 # extract the legend from one of the plots
 legend <- get_legend(p2.1)
-legend
-prow <- plot_grid(prow3, legend, rel_widths = c(2,.4))
-prow
+
 if(TRUE){
-  pdf("/Users/JaneyLienau/Desktop/Figure-4.pdf", width = 10, height = 5)
-  plot(prow)
+  pdf("/Users/JaneyLienau/Desktop/Figure-4-test.pdf", width = 7, height = 5)
+  plot(prow3)
   dev.off()}
 
+test <- plot_grid(p2.3, legend, rel_widths = c(2,.4))
+test
+if(TRUE){
+  pdf("/Users/JaneyLienau/Desktop/figre5-legend.pdf", width = 7, height = 5)
+  plot(test)
+  dev.off()}
+#combind in illistrator
 #_______________________________________________________
 ## Figure 5: C:N ratio
 #_______________________________________________________
@@ -238,7 +244,7 @@ p2.3 <- ggplot(oldforest, aes(x=Treatment, y=CtoN))+
   scale_fill_manual(values = c("FixedColor" = "salmon")) +
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
-    y = 'Change in C:N Ratio (Old Forest)')+
+    y = 'Change in C:N Ratio')+
   theme(axis.title.x=element_text(size=14), 
         axis.title.y=element_text(size=14), 
         axis.text.x=element_text(size=12), 
@@ -428,11 +434,11 @@ m17 <- lme(CtoN ~ Treatment,random = ~1| Block, data=oldforest);summary(m17);sha
 m18 <- lme(CtoN ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m18);shapiro.test(resid(m18));Anova(m18);lsmeans(m18, pairwise~Forest, adjust="tukey")
 
 #--------------------testing WCH and Ph
-m <- lme(WHCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)#
+m19 <- lme(WHCDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m19);shapiro.test(resid(m19));Anova(m19);lsmeans(m19, pairwise~Treatment, adjust="tukey");anova(m19)#
+m20 <- lme(pHDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m20);shapiro.test(resid(m20));Anova(m20);lsmeans(m20, pairwise~Treatment, adjust="tukey");anova(m20)#
 
-m <- lme(NnitDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m7);shapiro.test(resid(m7));Anova(m7);lsmeans(m7, pairwise~Treatment, adjust="tukey") #
-
-m <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngforest);summary(m8);shapiro.test(resid(m8));Anova(m8);lsmeans(m8, pairwise~Treatment, adjust="tukey")   
+m21 <- lme(WHCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m21);shapiro.test(resid(m21));Anova(m21);lsmeans(m21, pairwise~Treatment, adjust="tukey");anova(m21)#
+m22 <- lme(pHDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
 
 #_______________________________________________________
 ## Stats Table
@@ -442,7 +448,7 @@ m <- lme(NamDelta ~ Treatment+pHDelta+WHCDelta,random = ~1| Block, data=youngfor
 anova_results_list <- list()
 
 # Loop through the models (adjust the range as needed)
-for (i in 1:18) {
+for (i in 1:22) {
   # Calculate ANOVA for each model (a1 through a49)
   anova_result <- anova(get(paste0("m", i)))
   anova_result$Response <- as.character(formula(get(paste0("m", i)))[[2]])
@@ -481,7 +487,7 @@ combined_df <- combined_df %>%
   mutate(term = sub("Forest\\d+", "Forest", term))%>%
   mutate(term = sub("Treatment\\d+", "Treatment", term))%>%
   mutate(term = sub("	Treatment:Forest\\d+", "Treatment:Forest", term))%>%
-  mutate(Order = 1:48)
+  mutate(Order = 1:56)
 #rm(table_df)
 table_df <- combined_df %>%
   select(Response, term, F_value, Order) %>%
