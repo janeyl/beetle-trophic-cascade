@@ -735,9 +735,9 @@ s1 <- ggplot(nmin, aes(x=Forest, y=Nmin_June, fill = Forest))+
     y = 'Net Nitrogen Mineralization\n(ug N g-1 day-1)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -762,9 +762,9 @@ s1.1 <- ggplot(nmin, aes(x=Forest, y=Nmin_Sept, fill = Forest))+
     y = 'Net Nitrogen Mineralization\n(ug N g-1 day-1)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -789,9 +789,9 @@ s2 <- ggplot(nmin, aes(x=Forest, y=Nnit_June, fill = Forest))+
     y = 'Nitrification\n(ug N g-1 day-1)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -814,9 +814,9 @@ s2.1 <- ggplot(nmin, aes(x=Forest, y=Nnit_Sept, fill = Forest))+
     y = 'Nitrification\n(ug N g-1 day-1)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -839,9 +839,9 @@ s3 <- ggplot(nmin, aes(x=Forest, y=Nam_June, fill = Forest))+
     y = 'Ammonification\n(ug N g-1 day-1)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -864,9 +864,9 @@ s3.1 <- ggplot(nmin, aes(x=Forest, y=Nam_Sept, fill = Forest))+
     y = 'Ammonification\n(ug N g-1 day-1)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -889,9 +889,9 @@ s4 <- ggplot(nmin, aes(x=Forest, y=TC_June, fill = Forest))+
     y = 'Total Carbon (%)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -914,9 +914,9 @@ s4.1 <- ggplot(nmin, aes(x=Forest, y=TC_Sept, fill = Forest))+
     y = 'Total Carbon (%)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -939,9 +939,9 @@ s5 <- ggplot(nmin, aes(x=Forest, y=TN_June, fill = Forest))+
     y = 'Total Nitrogen (%)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -964,9 +964,9 @@ s5.1 <- ggplot(nmin, aes(x=Forest, y=TN_Sept, fill = Forest))+
     y = 'Total Nitrogen (%)',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -989,9 +989,9 @@ s6 <- ggplot(nmin, aes(x=Forest, y=CtoN_June, fill = Forest))+
     y = 'C:N Ratio',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -1014,9 +1014,9 @@ s6.1 <- ggplot(nmin, aes(x=Forest, y=CtoN_Sept, fill = Forest))+
     y = 'C:N Ratio',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -1039,9 +1039,9 @@ s7 <- ggplot(nmin, aes(x=Forest, y=pH_June, fill = Forest))+
     y = 'Soil pH',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -1064,9 +1064,9 @@ s7.1 <- ggplot(nmin, aes(x=Forest, y=pH_Sept, fill = Forest))+
     y = 'Soil pH',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -1089,9 +1089,9 @@ s8 <- ggplot(nmin, aes(x=Forest, y=WHC_June, fill = Forest))+
     y = 'WHC',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
@@ -1114,9 +1114,9 @@ s8.1 <- ggplot(nmin, aes(x=Forest, y=WHC_Sept, fill = Forest))+
     y = 'WHC',
     fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
-        axis.title.y=element_text(size=14), 
+        axis.title.y=element_text(size=12), 
         axis.text.x=element_text(size=18), 
-        axis.text.y=element_text(size=12))+
+        axis.text.y=element_text(size=10))+
   theme(title=element_text(size=rel(1.2)))+
   scale_x_discrete(name ="", 
                    limits = c("Old","Young"), 
