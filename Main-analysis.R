@@ -77,7 +77,8 @@ p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)',
@@ -87,7 +88,7 @@ p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
         axis.text.x=element_text(size=12), 
         axis.text.y=element_text(size=12))+
   theme(title=element_text(size=rel(1.2)))+
-  scale_x_discrete(name ="Ground Beetle Treatment", 
+  scale_x_discrete(name ="", 
                    limits = c("CT","HT","PT"), 
                    labels = c("Control", "Omnivore\n+Predator","Predator"))+
   theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
@@ -108,7 +109,8 @@ p1.1 <- ggplot(nmin, aes(x=Treatment, y=Nmin_June, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) +  # Match point color to fill color
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Initial Net Nitrogen Mineralization\n(ug N g-1 day-1)',
@@ -132,7 +134,8 @@ p1.2 <- ggplot(nmin, aes(x=Treatment, y=Nmin_Sept, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) +  # Match point color to fill color
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Final Net Nitrogen Mineralization\n(ug N g-1 day-1)',
@@ -171,7 +174,8 @@ p2.1 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) +  # Match point color to fill color
   theme_minimal()+
   labs(x = 'Ground Beetle Treatment', 
     y = 'Change in Total Carbon (%)',
@@ -195,7 +199,8 @@ p2.2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + # Match point color to fill color
   theme_minimal()+
   labs(x = 'Ground Beetle Treatment', 
     y = 'Change in Total Nitrogen (%)',
@@ -226,12 +231,7 @@ if(TRUE){
   plot(prow3)
   dev.off()}
 
-test <- plot_grid(p2.3, legend, rel_widths = c(2,.4))
-test
-if(TRUE){
-  pdf("/Users/JaneyLienau/Desktop/figre5-legend.pdf", width = 7, height = 5)
-  plot(test)
-  dev.off()}
+
 #combind in illistrator
 #_______________________________________________________
 ## Figure 5: C:N ratio
@@ -241,7 +241,8 @@ p2.3 <- ggplot(oldforest, aes(x=Treatment, y=CtoN))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("FixedColor" = "salmon")) +
+  scale_fill_manual(values = c("FixedColor" = "#e5f5e0")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Change in C:N Ratio')+
@@ -264,7 +265,8 @@ p2.4 <- ggplot(nmin, aes(x=Treatment, y=CtoN_June, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Initial C:N Ratio',
@@ -288,7 +290,8 @@ p2.5 <- ggplot(nmin, aes(x=Treatment, y=CtoN_Sept, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Final C:N Ratio',
@@ -312,7 +315,8 @@ p2.6 <- ggplot(nmin, aes(x=Treatment, y=CtoN, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Change in C:N Ratio',
@@ -331,6 +335,13 @@ p2.6 <- ggplot(nmin, aes(x=Treatment, y=CtoN, fill = Forest))+
         axis.text.y=element_text(margin = margin(r = 10)))+
   theme(legend.position = "top")
 p2.6
+
+test <- plot_grid(p2.3, legend, rel_widths = c(2,.4))
+test
+if(TRUE){
+  pdf("/Users/JaneyLienau/Desktop/figre5-legend.pdf", width = 7, height = 5)
+  plot(test)
+  dev.off()}
 
 if(TRUE){
   pdf("/Users/JaneyLienau/Desktop/Figure-5.pdf", width = 5, height = 5)
@@ -439,6 +450,15 @@ m20 <- lme(pHDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m20
 
 m21 <- lme(WHCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m21);shapiro.test(resid(m21));Anova(m21);lsmeans(m21, pairwise~Treatment, adjust="tukey");anova(m21)#
 m22 <- lme(pHDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
+#--------testing
+m22 <- lme(TC_June ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
+m22 <- lme(TN_June ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
+m22 <- lme(TC_Sept ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
+m22 <- lme(TN_Sept ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
+m22 <- lme(TNDelta ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
+
+m22 <- lme(Nmin_June ~ Treatment,random = ~1| Block, data=youngforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
+m22 <- lme(Nmin_Sept ~ Forest,random = ~1| Block, data=oldforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
 
 #_______________________________________________________
 ## Stats Table
@@ -609,7 +629,8 @@ p4 <- ggplot(nmin, aes(x=Forest, y=NminDelta, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + # Match point color to fill color
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Change in Net Nitrogen Mineralization\n(ug N g-1 day-1)',
@@ -636,7 +657,7 @@ dev.off()
 
 
 #_______________________________________________________
-# Supplemental Figure 2: other soil variables
+# Supplemental Figure 2: pH WHC
 #_______________________________________________________
 
 px <- ggplot(nmin, aes(x=Treatment, y=pHDelta, fill = Forest))+
@@ -644,7 +665,8 @@ px <- ggplot(nmin, aes(x=Treatment, y=pHDelta, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
   theme_minimal()+
   labs(#x = 'Ground Beetle Treatment', 
     y = 'Change in Soil pH',
@@ -669,7 +691,8 @@ pw <- ggplot(nmin, aes(x=Treatment, y=WHCDelta, fill = Forest))+
   geom_half_point(aes(color = Forest), 
                   side = "r", show.legend = F,
                   size = 1, alpha = .5)+
-  scale_fill_manual(values = c("salmon", "paleturquoise3")) +
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
   theme_minimal()+
   labs(x = 'Ground Beetle Treatment', 
     y = 'Change in WHC',
@@ -688,7 +711,7 @@ pw <- ggplot(nmin, aes(x=Treatment, y=WHCDelta, fill = Forest))+
         axis.text.y=element_text(margin = margin(r = 10)))+
   theme(legend.position = "none")
 pw
-pxw <- plot_grid(px,pw, ncol = 1)
+pxw <- plot_grid(px,pw, ncol = 1, labels = c("A", "B"))
 pxw
 
 
@@ -696,7 +719,523 @@ if(TRUE){
   pdf("/Users/JaneyLienau/Desktop/Supp-figX.pdf", width = 5, height = 10)
   plot(pxw)
   dev.off()}
+#_______________________________________________________
+#Supplemental X: all initial final
+#_______________________________________________________
 
+s1 <- ggplot(nmin, aes(x=Forest, y=Nmin_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Net Nitrogen Mineralization\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "top")+
+  ggtitle("Initial")+
+  theme(plot.title = element_text(hjust = 0.5))
+s1
+s1.1 <- ggplot(nmin, aes(x=Forest, y=Nmin_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Net Nitrogen Mineralization\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "top")+
+  ggtitle("Final")+
+  theme(plot.title = element_text(hjust = 0.5))
+s1.1
+s2 <- ggplot(nmin, aes(x=Forest, y=Nnit_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Nitrification\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s2
+s2.1 <- ggplot(nmin, aes(x=Forest, y=Nnit_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Nitrification\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s2.1
+s3 <- ggplot(nmin, aes(x=Forest, y=Nam_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Ammonification\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s3
+s3.1 <- ggplot(nmin, aes(x=Forest, y=Nam_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Ammonification\n(ug N g-1 day-1)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s3.1
+s4 <- ggplot(nmin, aes(x=Forest, y=TC_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Total Carbon (%)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s4
+s4.1 <- ggplot(nmin, aes(x=Forest, y=TC_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Total Carbon (%)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s4.1
+s5 <- ggplot(nmin, aes(x=Forest, y=TN_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Total Nitrogen (%)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s5
+s5.1 <- ggplot(nmin, aes(x=Forest, y=TN_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Total Nitrogen (%)',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s5.1
+s6 <- ggplot(nmin, aes(x=Forest, y=CtoN_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'C:N Ratio',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s6
+s6.1 <- ggplot(nmin, aes(x=Forest, y=CtoN_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'C:N Ratio',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s6.1
+s7 <- ggplot(nmin, aes(x=Forest, y=pH_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Soil pH',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s7
+s7.1 <- ggplot(nmin, aes(x=Forest, y=pH_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'Soil pH',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("", ""))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s7.1
+s8 <- ggplot(nmin, aes(x=Forest, y=WHC_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'WHC',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("Old Forest", "Young Forest"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s8
+s8.1 <- ggplot(nmin, aes(x=Forest, y=WHC_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  scale_color_manual(values = c("#31a354", "#31a354")) + 
+  theme_minimal()+
+  labs(#x = 'Ground Beetle Treatment', 
+    y = 'WHC',
+    fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=18), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("Old","Young"), 
+                   labels = c("Old Forest", "Young Forest"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+s8.1
+
+
+sp1<-plot_grid(s1,s2,s3,s4,s5,s6,s7,s8, ncol = 1, labels = c('a', 'b', 'c', 'd','e','f', 'g', 'h'), label_size = 16)
+sp1
+sp2<-plot_grid(s1.1,s2.1,s3.1,s4.1,s5.1,s6.1,s7.1,s8.1, ncol = 1, labels = c('i', 'j', 'k', 'l','m','n','o','p'), label_size = 16)
+grid<-plot_grid(sp1, sp2, ncol = 2)
+grid
+pdf("/Users/JaneyLienau/Desktop/Supp2_species_grid_density.pdf", width = 10, height = 21)
+plot(grid)
+dev.off()
+#_______________________________________________________
+##Playground
+#_______________________________________________________
+p9 <- ggplot(nmin, aes(x=Treatment, y=TC_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', 
+       y = 'Initial Total Carbon (%)',
+       fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+p9
+p10 <- ggplot(nmin, aes(x=Treatment, y=TC_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', 
+       y = 'Final Total Carbon (%)',
+       fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+p10
+p11 <- ggplot(nmin, aes(x=Treatment, y=TN_June, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', 
+       y = 'Initial Total Nitrogen (%)',
+       fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+p11
+p12 <- ggplot(nmin, aes(x=Treatment, y=TN_Sept, fill = Forest))+
+  geom_half_boxplot(side = "l",  outlier.shape = 17)+
+  geom_half_point(aes(color = Forest), 
+                  side = "r", show.legend = F,
+                  size = 1, alpha = .5)+
+  scale_fill_manual(values = c("#e5f5e0", "#31a354")) +
+  theme_minimal()+
+  labs(x = 'Ground Beetle Treatment', 
+       y = 'Final Total Nitrogen (%)',
+       fill='Forest Type')+
+  theme(axis.title.x=element_text(size=14), 
+        axis.title.y=element_text(size=14), 
+        axis.text.x=element_text(size=12), 
+        axis.text.y=element_text(size=12))+
+  theme(title=element_text(size=rel(1.2)))+
+  scale_x_discrete(name ="", 
+                   limits = c("CT","HT","PT"), 
+                   labels = c("Control", "Omnivore\n+Predator","Predator"))+
+  theme(axis.title.x = element_text(margin = margin(t = 5, b=5)), 
+        axis.title.y = element_text(margin = margin(l = 5, r=5)), 
+        axis.text.x=element_text(margin = margin(t=10)), 
+        axis.text.y=element_text(margin = margin(r = 10)))+
+  theme(legend.position = "none")
+p12
 #_______________________________________________________
 ##End-
 #_______________________________________________________
