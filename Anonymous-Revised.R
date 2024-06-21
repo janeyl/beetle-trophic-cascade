@@ -1,66 +1,66 @@
 #___________________________________________________________________________________________________________
-## Janey Lienau
-## Title: Ground beetle trophic interactions alter available nitrogen in temperate forest soil
+## 
+## Manuscript Title: Ground beetle trophic interactions alter available nitrogen in temperate forest soil
 ## Created: Fall 2022
-## Last Modified: May 31 2024
+## Last Modified: June 19, 2024
 #___________________________________________________________________________________________________________
 
 #_______________________________________________________
 #Import data----
 #_______________________________________________________
 if(TRUE){
-library(dplyr)
-library(ggplot2)
-library(corrplot)
-library(lme4)
-library(car)
-library(nlme)
-library(emmeans)
-library(ggpol)
-library(RColorBrewer)
-library(cowplot)
-library(ggrepel)
-library(gghalves)
-library(kableExtra) #
-library(broom) 
-library(spdep)
+  library(dplyr)
+  library(ggplot2)
+  library(corrplot)
+  library(lme4)
+  library(car)
+  library(nlme)
+  library(emmeans)
+  library(ggpol)
+  library(RColorBrewer)
+  library(cowplot)
+  library(ggrepel)
+  library(gghalves)
+  library(kableExtra) #
+  library(broom) 
+  library(spdep)
 }
 
 #_______________________________________________________
 #Load data----
 #_______________________________________________________
 if(TRUE){
-rawdata <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/rawdata.csv")
-
-season <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Season.csv")
-
-plotinfo <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Cascade_PlotInfo.csv")
-
-plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
-
+  rawdata <- read.csv("rawdata.csv")
+  
+  season <- read.csv("Season.csv")
+  
+  plotinfo <- read.csv("Cascade_PlotInfo.csv")
+  
+  plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
+  
 }
 #_______________________________________________________
 #Make and clean df----
 #_______________________________________________________
 if(TRUE){
-nmin <- left_join(rawdata, plotinfo, by = "Plot")
-
-#calculate delta for all variables
-nmin <- mutate(nmin, 
-               NminDelta = Nmin_Sept-Nmin_June,
-               NnitDelta = Nnit_Sept-Nnit_June,
-               NamDelta = Nam_Sept-Nam_June,
-               TNDelta = TN_Sept-TN_June,
-               TCDelta = TC_Sept-TC_June,
-               pHDelta = pH_Sept-pH_June,
-               WHCDelta = WHC_Sept-WHC_June,
-              CtoN_June = TC_June/TN_June,
-              CtoN_Sept = TC_Sept/TN_Sept,
-              CtoN = CtoN_Sept-CtoN_June)
-
-#forest 
-oldforest <- filter(nmin, Plot == c(1:15))
-youngforest <- filter(nmin, Plot == c(16:30))
+  nmin <- left_join(rawdata, plotinfo, by = "Plot")
+  
+  #calculate delta for all variables
+  nmin <- mutate(nmin, 
+                 NminDelta = Nmin_Sept-Nmin_June,
+                 NnitDelta = Nnit_Sept-Nnit_June,
+                 NamDelta = Nam_Sept-Nam_June,
+                 TNDelta = TN_Sept-TN_June,
+                 TCDelta = TC_Sept-TC_June,
+                 pHDelta = pH_Sept-pH_June,
+                 WHCDelta = WHC_Sept-WHC_June,
+                 CtoN_June = TC_June/TN_June,
+                 CtoN_Sept = TC_Sept/TN_Sept,
+                 CtoN = CtoN_Sept-CtoN_June)
+  
+  #forest 
+  oldforest <- filter(nmin, Plot == c(1:15))
+  youngforest <- filter(nmin, Plot == c(16:30))
 }
 #___________________________________________________________________________________________________________
 ##Figures
@@ -101,7 +101,7 @@ p1 <- ggplot(nmin, aes(x=Treatment, y=NminDelta, fill = Forest))+
   theme(legend.position = "top")
 p1 
 if(TRUE){
-  pdf("/Users/JaneyLienau/Dropbox (YSE)/_mesc-thesis/beetle-trophic-cascade/figures/Fig-3-a.pdf", width = 7, height = 5)
+  pdf("~Fig-3-a.pdf", width = 7, height = 5)
   plot(p1)
   dev.off()}
 
@@ -158,11 +158,11 @@ p1.2 <- ggplot(nmin, aes(x=Treatment, y=Nmin_Sept, fill = Forest))+
 p1.2
 
 prow2 <- plot_grid(p1.1, p1.2, align = 'h',
-  hjust = -1
+                   hjust = -1
 )
 prow2
 if(TRUE){
-  pdf("/Users/JaneyLienau/Dropbox (YSE)/_mesc-thesis/beetle-trophic-cascade/figures/Fig-3-b&c.pdf", width = 10, height = 5)
+  pdf("~Fig-3-b&c.pdf", width = 10, height = 5)
   plot(prow2)
   dev.off()}
 #composite Figure 3 parts A,B,C in illistrator
@@ -180,8 +180,8 @@ p2.1 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
   scale_color_manual(values = c("#31a354", "#31a354")) +  # Match point color to fill color
   theme_minimal()+
   labs(x = 'Ground Beetle Treatment', 
-    y = 'Change in Total Carbon (%)',
-    fill='Forest Type')+
+       y = 'Change in Total Carbon (%)',
+       fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
         axis.title.y=element_text(size=14), 
         axis.text.x=element_text(size=12), 
@@ -205,8 +205,8 @@ p2.2 <- ggplot(nmin, aes(x=Treatment, y=TCDelta, fill = Forest))+
   scale_color_manual(values = c("#31a354", "#31a354")) + # Match point color to fill color
   theme_minimal()+
   labs(x = 'Ground Beetle Treatment', 
-    y = 'Change in Total Nitrogen (%)',
-    fill='Forest Type')+
+       y = 'Change in Total Nitrogen (%)',
+       fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
         axis.title.y=element_text(size=14), 
         axis.text.x=element_text(size=12), 
@@ -229,7 +229,7 @@ prow3
 legend <- get_legend(p2.1)
 
 if(TRUE){
-  pdf("/Users/JaneyLienau/Dropbox (YSE)/_mesc-thesis/beetle-trophic-cascade/figures/Fig-4-a&b.pdf", width = 7, height = 5)
+  pdf("~Fig-4-a&b.pdf", width = 7, height = 5)
   plot(prow3)
   dev.off()}
 
@@ -336,7 +336,7 @@ p2.6
 test <- plot_grid(p2.3, legend, rel_widths = c(2,.4))
 test
 if(TRUE){
-  pdf("/Users/JaneyLienau/Dropbox (YSE)/_mesc-thesis/beetle-trophic-cascade/figures/Fig-4-c.pdf", width = 7, height = 5)
+  pdf("~Fig-4-c.pdf", width = 7, height = 5)
   plot(test)
   dev.off()}
 
@@ -443,15 +443,6 @@ m20 <- lme(pHDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m20
 
 m21 <- lme(WHCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m21);shapiro.test(resid(m21));Anova(m21);lsmeans(m21, pairwise~Treatment, adjust="tukey");anova(m21)#
 m22 <- lme(pHDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
-#--------testing
-m22 <- lme(TC_June ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-m22 <- lme(TN_June ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-m22 <- lme(TC_Sept ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-m22 <- lme(TN_Sept ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-m22 <- lme(TNDelta ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-
-m22 <- lme(Nmin_June ~ Treatment,random = ~1| Block, data=youngforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
-m22 <- lme(Nmin_Sept ~ Forest,random = ~1| Block, data=oldforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
 
 #_______________________________________________________
 ## Stats Table
@@ -505,7 +496,7 @@ combined_df <- combined_df %>%
 table_df <- combined_df %>%
   select(Response, term, F_value, Order) %>%
   tidyr::pivot_wider(names_from = "term", values_from = "F_value")
-#----------------------------------Stopped here->need to adapt for adding m16 and m17, and m18-TABLE NOT WORKING!
+
 #I extracted C:N manually
 table_df <- table_df%>%
   select(-"(Intercept)")%>%
@@ -514,7 +505,7 @@ table_df <- table_df%>%
   mutate(SiteID = ifelse(row_number() >= 13 & row_number() <= 20, "TNTC*Forest", SiteID))%>%
   mutate(SiteID = ifelse(row_number() >= 21 & row_number() <= 32, "NMin*YoungForest", SiteID))%>%
   mutate(SiteID = ifelse(row_number() >= 33 & row_number() <= 40, "TNTC*YoungForest", SiteID))
-  
+
 Vars_a <- colnames(table_df)
 
 ### table test
@@ -644,9 +635,9 @@ p4 <- ggplot(nmin, aes(x=Forest, y=NminDelta, fill = Forest))+
 p4
 
 if(TRUE){
-pdf("/Users/JaneyLienau/Dropbox (YSE)/_mesc-thesis/beetle-trophic-cascade/figures/Supp-Fig-1.pdf", width = 6, height = 5)
-plot(p4)
-dev.off()}
+  pdf("~Supp-Fig-1.pdf", width = 6, height = 5)
+  plot(p4)
+  dev.off()}
 
 #_______________________________________________________
 # Supplemental Figure 2: pH WHC
@@ -687,8 +678,8 @@ pw <- ggplot(nmin, aes(x=Treatment, y=WHCDelta, fill = Forest))+
   scale_color_manual(values = c("#31a354", "#31a354")) + 
   theme_minimal()+
   labs(x = 'Ground Beetle Treatment', 
-    y = 'Change in WHC',
-    fill='Forest Type')+
+       y = 'Change in WHC',
+       fill='Forest Type')+
   theme(axis.title.x=element_text(size=14), 
         axis.title.y=element_text(size=14), 
         axis.text.x=element_text(size=12), 
@@ -708,11 +699,11 @@ pxw
 
 
 if(TRUE){
-  pdf("/Users/JaneyLienau/Dropbox (YSE)/_mesc-thesis/beetle-trophic-cascade/figures/Supp-Fig-2.pdf", width = 5, height = 10)
+  pdf("~Supp-Fig-2.pdf", width = 5, height = 10)
   plot(pxw)
   dev.off()}
 #_______________________________________________________
-#Supplemental X: all initial final
+#Supplemental 3: all initial final
 #_______________________________________________________
 
 s1 <- ggplot(nmin, aes(x=Forest, y=Nmin_June, fill = Forest))+
@@ -1127,9 +1118,9 @@ sp2<-plot_grid(s1.1,s2.1,s3.1,s4.1,s5.1,s6.1,s7.1,s8.1, ncol = 1, labels = c('(i
 grid<-plot_grid(sp1, sp2, ncol = 2)
 grid
 if(TRUE){
-pdf("/Users/JaneyLienau/Dropbox (YSE)/_mesc-thesis/beetle-trophic-cascade/figures/Supp-Fig-3.pdf", width = 10, height = 21)
-plot(grid)
-dev.off()}
+  pdf("~Supp-Fig-3.pdf", width = 10, height = 21)
+  plot(grid)
+  dev.off()}
 
 #_______________________________________________________
 ##End-
