@@ -29,11 +29,11 @@ p_load(dplyr,
 #Load data----
 #_______________________________________________________
 if(TRUE){
-rawdata <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/rawdata.csv")
+rawdata <- read.csv("rawdata.csv")
 
-season <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Season.csv")
+season <- read.csv("Season.csv")
 
-plotinfo <- read.csv("/Users/JaneyLienau/Desktop/GitHubRepository/beetle-trophic-cascade/Cascade_PlotInfo.csv")
+plotinfo <- read.csv("Cascade_PlotInfo.csv")
 
 plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
 
