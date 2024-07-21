@@ -1,9 +1,9 @@
 Plot,"Treatment (PT, HT, C)",Block,Forest,Initial_Stock,Second_Stock,Final_Soil_Sample,Notes
 1,CT,A,Old,8-Jul-22,28-Jul-22,14-Sep-22,
-2,PT,A,Old,8-Jul-22,28-Jul-22,14-Sep-22,Green Ptrosticus
+2,PT,A,Old,8-Jul-22,28-Jul-22,14-Sep-22,
 3,HT,A,Old,8-Jul-22,28-Jul-22,14-Sep-22,
 4,CT,B,Old,8-Jul-22,28-Jul-22,14-Sep-22,
-5,PT,B,Old,8-Jul-22,28-Jul-22,14-Sep-22,Green Ptrosticus
+5,PT,B,Old,8-Jul-22,28-Jul-22,14-Sep-22,
 6,HT,B,Old,8-Jul-22,28-Jul-22,14-Sep-22,
 7,CT,C,Old,8-Jul-22,28-Jul-22,14-Sep-22,
 8,HT,C,Old,8-Jul-22,28-Jul-22,14-Sep-22,
@@ -24,7 +24,7 @@ Plot,"Treatment (PT, HT, C)",Block,Forest,Initial_Stock,Second_Stock,Final_Soil_
 23,HT,H,Young,8-Jul-22,28-Jul-22,14-Sep-22,
 24,PT,H,Young,8-Jul-22,28-Jul-22,14-Sep-22,
 25,CT,I,Young,9-Jul-22,28-Jul-22,14-Sep-22,
-26,HT,I,Young,9-Jul-22,28-Jul-22,14-Sep-22,Double check date when I came back*
+26,HT,I,Young,9-Jul-22,28-Jul-22,14-Sep-22,
 27,PT,I,Young,8-Jul-22,28-Jul-22,14-Sep-22,
 28,CT,J,Young,9-Jul-22,28-Jul-22,14-Sep-22,
 29,HT,J,Young,9-Jul-22,28-Jul-22,14-Sep-22,

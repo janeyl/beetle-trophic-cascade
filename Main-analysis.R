@@ -2,29 +2,28 @@
 ## Janey Lienau
 ## Title: Ground beetle trophic interactions alter available nitrogen in temperate forest soil
 ## Created: Fall 2022
-## Last Modified: May 31 2024
+## Last Modified: June 2024
 #___________________________________________________________________________________________________________
 
 #_______________________________________________________
 #Import data----
 #_______________________________________________________
-if(TRUE){
-library(dplyr)
-library(ggplot2)
-library(corrplot)
-library(lme4)
-library(car)
-library(nlme)
-library(emmeans)
-library(ggpol)
-library(RColorBrewer)
-library(cowplot)
-library(ggrepel)
-library(gghalves)
-library(kableExtra) #
-library(broom) 
-library(spdep)
-}
+library(pacman)
+p_load(dplyr,
+       ggplot2,
+       corrplot,
+       lme4,
+       car,
+       nlme,
+       emmeans,
+       ggpol,
+       RColorBrewer,
+       cowplot,
+       ggrepel,
+       gghalves,
+       kableExtra,
+       broom,
+       spdep)
 
 #_______________________________________________________
 #Load data----
@@ -558,57 +557,37 @@ table4
 #_______________________________________________________
 ## Table 2: average soil variables table
 #_______________________________________________________
-#pH
-round(mean(oldforest$pH_June), 2)
-round(mean(oldforest$pH_Sept), 2)
 
-round(mean(youngforest$pH_June), 2)
-round(mean(youngforest$pH_Sept), 2)
-#WHC
-round(mean(oldforest$WHC_June), 2)
-round(mean(oldforest$WHC_Sept), 2)
 
-round(mean(youngforest$WHC_June), 2)
-round(mean(youngforest$WHC_Sept), 2)
-#Total Carbon
-round(mean(oldforest$TC_June), 2)
-round(mean(oldforest$TC_Sept), 2)
+variables <- c("pH_June", "pH_Sept", 
+               "WHC_June", "WHC_Sept", 
+               "TC_June", "TN_Sept",  
+               "TN_June", "TC_Sept",
+               "CtoN_June", "CtoN_Sept", 
+               "Nmin_June", "Nmin_Sept",
+               "Nnit_June", "Nnit_Sept",
+               "Nam_June",   "Nam_Sept",
+               "pHDelta", 
+               "WHCDelta", 
+               "TCDelta",
+               "TNDelta",
+               "CtoN",
+               "NminDelta", 
+               "NnitDelta", 
+               "NamDelta")
 
-round(mean(youngforest$TC_June), 2)
-round(mean(youngforest$TC_Sept), 2)
-#Total Nitrogen
-round(mean(oldforest$TN_June), 2)
-round(mean(oldforest$TN_Sept), 2)
-
-round(mean(youngforest$TN_June), 2)
-round(mean(youngforest$TN_Sept), 2)
-# N min
-round(mean(oldforest$Nmin_June), 2)
-round(mean(oldforest$Nmin_Sept), 2)
-
-round(mean(youngforest$Nmin_June), 2)
-round(mean(youngforest$Nmin_Sept), 2)
-# N nit
-round(mean(oldforest$Nnit_June), 2)
-round(mean(oldforest$Nnit_Sept), 2)
-
-round(mean(youngforest$Nnit_June), 2)
-round(mean(youngforest$Nnit_Sept), 2)
-
-# N amon
-round(mean(oldforest$Nam_June), 2)
-round(mean(oldforest$Nam_Sept), 2)
-
-round(mean(youngforest$Nam_June), 2)
-round(mean(youngforest$Nam_Sept), 2)
-
-# C:N
-round(mean(oldforest$CtoN_June), 2)#13.77
-round(mean(oldforest$CtoN_Sept), 2)#13.45
-
-round(mean(youngforest$CtoN_June), 2)#18.4
-round(mean(youngforest$CtoN_Sept), 2)#17.62
-
+summary_stats_table_Old <- oldforest %>%
+  summarise(across(all_of(variables), list(mean = ~round(mean(., na.rm = TRUE), 3), 
+                                           se = ~round(sd(., na.rm = TRUE)/sqrt(sum(!is.na(.))), 3))))%>%
+  tidyr::pivot_longer(., everything(), 
+                      names_to = "Old Forest", 
+                      values_to = "Value")
+summary_stats_table_Young <- youngforest %>%
+  summarise(across(all_of(variables), list(mean = ~round(mean(., na.rm = TRUE), 3), 
+                                           se = ~round(sd(., na.rm = TRUE)/sqrt(sum(!is.na(.))), 3))))%>%
+  tidyr::pivot_longer(., everything(), 
+                      names_to = "Young Forest", 
+                      values_to = "Value")
 #___________________________________________________________________________________________________________
 ##Supplemental Material
 #___________________________________________________________________________________________________________
