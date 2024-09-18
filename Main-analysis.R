@@ -1,8 +1,9 @@
 #___________________________________________________________________________________________________________
 ## Janey Lienau
-## Title: Ground beetle trophic interactions alter available nitrogen in temperate forest soil
+## Title: Ground beetle trophic interactions alter available nitrogen in forest soil
 ## Created: Fall 2022
 ## Last Modified: June 2024
+## DOI: 10.1111/oik.10638
 #___________________________________________________________________________________________________________
 
 #_______________________________________________________
@@ -35,13 +36,12 @@ season <- read.csv("Season.csv")
 
 plotinfo <- read.csv("Cascade_PlotInfo.csv")
 
-plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
-
 }
 #_______________________________________________________
 #Make and clean df----
 #_______________________________________________________
 if(TRUE){
+plotinfo <- rename(plotinfo, Treatment = Treatment..PT..HT..C.)
 nmin <- left_join(rawdata, plotinfo, by = "Plot")
 
 #calculate delta for all variables
