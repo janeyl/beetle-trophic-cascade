@@ -424,16 +424,10 @@ m15 <- lme(TCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m15);
 ##Delta and raw values C:N Young 
 #_______________________________________________________
 m16 <- lme(CtoN ~ Treatment,random = ~1| Block, data=youngforest);summary(m16);shapiro.test(resid(m16));Anova(m16);lsmeans(m16, pairwise~Treatment, adjust="tukey");anova(m16)
-#m <- lme(CtoN_Sept ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
-#m <- lme(CtoN_June ~ Treatment,random = ~1| Block, data=youngforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
 #_______________________________________________________
 ##Delta and raw values C:N Old 
 #_______________________________________________________
 m17 <- lme(CtoN ~ Treatment,random = ~1| Block, data=oldforest);summary(m17);shapiro.test(resid(m17));Anova(m17);lsmeans(m17, pairwise~Treatment, adjust="tukey");anova(m17)
-#sig
-#m <- lme(CtoN_June ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
-#m <- lme(CtoN_Sept ~ Treatment,random = ~1| Block, data=oldforest);summary(m);shapiro.test(resid(m));Anova(m);lsmeans(m, pairwise~Treatment, adjust="tukey");anova(m)
-#sig
 m18 <- lme(CtoN ~ Treatment*Forest,random = ~1| Block, data=nmin);summary(m18);shapiro.test(resid(m18));Anova(m18);lsmeans(m18, pairwise~Forest, adjust="tukey")
 
 #--------------------testing WCH and Ph
@@ -442,16 +436,6 @@ m20 <- lme(pHDelta ~ Treatment,random = ~1| Block, data=youngforest);summary(m20
 
 m21 <- lme(WHCDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m21);shapiro.test(resid(m21));Anova(m21);lsmeans(m21, pairwise~Treatment, adjust="tukey");anova(m21)#
 m22 <- lme(pHDelta ~ Treatment,random = ~1| Block, data=oldforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
-#--------testing
-m22 <- lme(TC_June ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-m22 <- lme(TN_June ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-m22 <- lme(TC_Sept ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-m22 <- lme(TN_Sept ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-m22 <- lme(TNDelta ~ Forest,random = ~1| Block, data=nmin);summary(m22);shapiro.test(resid(m22))
-
-m22 <- lme(Nmin_June ~ Treatment,random = ~1| Block, data=youngforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
-m22 <- lme(Nmin_Sept ~ Forest,random = ~1| Block, data=oldforest);summary(m22);shapiro.test(resid(m22));Anova(m22);lsmeans(m22, pairwise~Treatment, adjust="tukey");anova(m22)#
-
 #_______________________________________________________
 ## Stats Table
 #_______________________________________________________
